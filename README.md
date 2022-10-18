@@ -333,3 +333,251 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+
+
+#### `GET /api/freets?author=USERNAME` - Get all of a user’s freets
+
+**Returns**
+
+- A set of all existing Freets with an author attribute of USERNAME, sorted from most recent to least recent (based on datePosted attribute). 
+
+**Throws**
+
+- `400`  if author is not given
+- `404` error if author is not an existing username. 
+
+
+#### `GET /api/freets?liked=USERNAME` - Get all of a user’s liked freets
+
+**Returns**
+
+A set of all existing Freets which’s likes attribute includes a user with USERNAME, sorted from most recent to least recent (based on datePosted attribute). 
+
+**Throws**
+
+- `400`  if author is not given
+- `404` error if author is not an existing username. 
+
+#### `GET /api/freets?commented=USERNAME` - Get all of a user’s commented freets
+
+**Returns**
+
+A set of all existing Freets which’s comments attribute includes a comment with an author attribute of USERNAME, sorted from most recent to least recent (based on datePosted attribute). 
+
+**Throws**
+
+Throws 400 error if commented is not given or 404 error if commented  is not an existing username.
+
+
+#### `POST /api/follow/:USERNAME` - Follow a User
+
+Adds logged-in user to USERNAME User’s followers attribute. Adds USERNAME User to logged-in user’s following attribute. 
+
+**Throws**
+
+Throws 400 error if USERNAME is not given or 404 error if USERNAME  is not an existing username. 
+
+
+#### `DELETE /api/follow/:USERNAME` - Unfollow a User
+
+Removes logged-in user to USERNAME User’s followers attribute. Removes USERNAME User to logged-in user’s following attribute.  
+
+**Throws**
+
+Throws 400 error if USERNAME is not given or 404 error if USERNAME  is not an existing username. 
+
+
+#### `POST /api/freets` - Post a Freet
+
+**Body:**
+
+- content {string} – content of Freet
+
+- media {Image} – media content of Freet
+
+- credScoreEnabled{Boolean} – checks if cred score is enabled. 
+
+Creates a Freet by logged-in user. 
+
+**Throws**
+
+Throws 403 error if user is not logged in or 400 error if the content of the Freet is not valid (empty or too long). 
+
+
+#### `DELETE /api/refreets/:freetId?` - Delete a Freet
+
+Deletes a Freet freetId. 
+
+**Throws**
+
+Throws 400 error if freetId is not given or 404 error if freetId is not an existing Freet. 
+
+
+#### `GET /api/users?userString=USERSTRING` - Finding Users
+
+Returns a set of all existing Users with a username attribute that contains the string “USERSTRING”. 
+
+**Throws**
+
+Throws 400 error if userString is not given. 
+
+
+#### `POST /api/likes/:USERNAME` - Like a Freet
+
+**Body:**
+
+- freetId {string} – parent Freet
+
+Adds a like by USERNAME user to some FREETID Freet.
+
+**Throws**
+
+Throws 400 error if USERNAME is not given or 404 error if USERNAME  is not an existing username. 
+
+
+#### `DELETE	/api/likes/:likeId?` - Unlike a Freet
+
+Deletes a like likeId. 
+
+**Throws**
+
+Throws 400 error if likeId is not given or 404 error if likeId is not an existing like. 
+
+
+#### `POST /api/refreets/:USERNAME` - Refreet a Freet
+
+**Body:**
+
+- freetId {string} – parent Freet
+
+Adds a refreet by USERNAME user to some FREETID Freet . 
+
+**Throws**
+
+Throws 400 error if USERNAME is not given or 404 error if USERNAME  is not an existing username. 
+
+
+#### `DELETE /api/refreets/:refreetId?` - Remove Refreet from a Freet
+
+Deletes a refreet refreetId. 
+
+**Throws**
+
+Throws 400 error if refreetId is not given or 404 error if refreetId is not an existing refreet. 
+
+
+#### `POST /api/refreets/:USERNAME` - Post a Comment
+
+**Body:**
+
+- freetId {string} – parent Freet
+
+- content {string} – content of Comment
+
+Adds a comment by USERNAME user to some FREETID Freet . 
+
+**Throws**
+
+Throws 400 error if USERNAME is not given or 404 error if USERNAME  is not an existing username. 
+
+
+#### `DELETE /api/refreets/:commentId?` - Remove a Comment
+
+Deletes a comment commentId. 
+
+**Throws**
+
+Throws 400 error if commentId is not given or 404 error if commentId is not an existing comment. 
+
+
+#### `POST /api/threads` - Post a Thread
+
+**Body:**
+
+- content {Array<Freets>} – content of Thread
+
+- credScoreEnabled{Boolean} – checks if cred score is enabled. 
+
+Creates a Thread by logged-in user. 
+
+**Throws**
+
+Throws 403 error if user is not logged in.  
+
+
+#### `DELETE /api/threads/:threadId?` - Delete a Thread
+
+Deletes a Thread threadId. 
+
+**Throws**
+
+Throws 400 error if threadId is not given or 404 error if threadId is not an existing Thread. 
+
+
+#### `POST /api/FreetCredScore/` - Set FreetCredibilityScore
+
+**Body:**
+
+- freetId {string} – parent Freet
+
+- sources {Array<string>} – List of sources
+
+**Returns**
+
+Returns a credibility value based on the provided sources. 
+
+**Throws**
+
+Throws 400 error if freetId is not given or 404 error if freetId is not an existing Freet. 
+
+
+#### `POST /api/contestCredScore/` - Set ContestCredibilityScore
+
+**Body:**
+
+- freetId {string} – parent Freet
+
+- sources {Array<string>} – List of sources
+
+**Returns**
+
+Returns a delta change value to be added to the Freet’s original credibility score. 
+
+**Throws**
+
+Throws 400 error if freetId is not given or 404 error if freetId is not an existing Freet. 
+
+
+#### `POST /api/userCredScore/` - Set UserCredibilityScore
+
+**Body:**
+
+- userId {string} – parent User
+
+**Returns**
+
+Returns a credibility value based on the given user’s tweets. 
+
+**Throws**
+
+Throws 400 error if userId is not given or 404 error if userId is not an existing User. 
+
+
+#### `GET /api/freets?owner=USERNAMEfiltering=CREDFILTERING` - Get all freets in user’s feed
+
+**Body:**
+
+- unscored {Boolean}
+
+- highScored {Boolean}
+
+- lowScored {Boolean}
+
+**Returns**
+
+Returns a set of all existing Freets that have an author attribute belonging to USERNAME user’s following, sorted from most recent to least recent (based on datePosted attribute). Filters them according to the CREDFILTERING set of Booleans. 
+
+**Throws**
+
+Throws 400 error if owner is not given or 404 error if owner is not an existing username. 

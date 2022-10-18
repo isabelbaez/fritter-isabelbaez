@@ -42,7 +42,11 @@ const formsAndHandlers = {
   'create-freet': createFreet,
   'edit-freet': editFreet,
   'delete-freet': deleteFreet,
-  'view-freet': viewFreet // Add to formsAndHandlers to interact with on frontend
+  'view-freet': viewFreet, // Add to formsAndHandlers to interact with on frontend
+  'view-all-likes': viewAllLikes,
+  'view-likes-by-author': viewLikesByAuthor,
+  'create-like': createLike,
+  'delete-like': deleteLike,
 };
 
 // Attach handlers to forms
