@@ -2,6 +2,8 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {Like} from './model';
 import LikeModel from './model';
 import UserCollection from '../user/collection';
+import FreetModel from 'freet/model';
+import FreetCollection from '../freet/collection';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -26,6 +28,8 @@ class LikeCollection {
       parentId,
       dateCreated: date,
     });
+
+    FreetCollection.updateLike(parentId, like._id);
     await like.save(); // Saves freet to MongoDB
     return like;
   }
@@ -47,7 +51,7 @@ class LikeCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<Like>>> {
     // Retrieves freets and sorts them from most to least recent
-    return LikeModel.find({}).sort({dateModified: -1});
+    return LikeModel.find({}).sort({dateCreated: -1});
   }
 
   /**

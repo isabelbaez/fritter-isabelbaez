@@ -8,6 +8,7 @@
   <script src="/scripts/freet.js"></script>
   <script src="/scripts/user.js"></script>
   <script src="/scripts/like.js"></script>
+  <script src="/scripts/follow.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -97,17 +98,13 @@
           <input type="submit" value="Create Freet">
         </form>
 
-        <form id="edit-freet">
-          <h3>Edit Freet</h3>
+        <form id="like-freet">
+          <h3>Like Freet</h3>
           <div>
             <label for="id">ID:</label>
             <input id="id" name="id">
           </div>
-          <div>
-            <label for="content">Content:</label>
-            <textarea id="content" name="content"></textarea>
-          </div>
-          <input type="submit" value="Edit Freet">
+          <input type="submit" value="Like Freet">
         </form>
 
         <form id="view-freet">
@@ -159,6 +156,48 @@
         </div>
         <input type="submit" value="Delete Like">
       </form>
+
+      <form id="view-all-follows">
+        <h3>View All Follows</h3>
+        <input type="submit" value="View All Follows">
+      </form>
+
+      <form id="view-following">
+        <h3>View User's Following</h3>
+        <div>
+          <label for="author">User:</label>
+          <input id="author" name="author">
+        </div>
+        <input type="submit" value="View Following">
+      </form>
+
+      <form id="view-followers">
+        <h3>View User's Followers</h3>
+        <div>
+          <label for="author">User:</label>
+          <input id="author" name="author">
+        </div>
+        <input type="submit" value="View Followers">
+      </form>
+
+      <form id="create-follow">
+        <h3>Create Follow</h3>
+        <div>
+          <label for="dtsUserId">User ID:</label>
+          <textarea id="dstUserId" name="dstUserId"></textarea>
+        </div>
+        <input type="submit" value="Create Follow">
+      </form>
+
+      <form id="delete-follow">
+        <h3>Delete Freet</h3>
+        <div>
+          <label for="id">ID:</label>
+          <input id="id" name="id">
+        </div>
+        <input type="submit" value="Delete Follow">
+      </form>
+
       </div>
     </section>
     <section>

@@ -24,7 +24,6 @@ import LikeCollection from '../like/collection';
   next();
 };
 
-
 const isValidLikeParent = async (req: Request, res: Response, next: NextFunction) => {
   const validFormat = Types.ObjectId.isValid(req.body.parentId);
   const freet = validFormat ? await FreetCollection.findOne(req.body.parentId) : '';
@@ -38,14 +37,22 @@ const isValidLikeParent = async (req: Request, res: Response, next: NextFunction
     return;
   }
 
-  // TODO (When Freet implementation is complete):
-  // if (req.params.userId  in freet.likes) {
-  //   res.status(403).json({
-  //     error: {
-  //       doubleLiked: `Parent freet with freet ID ${req.body.parentId} has already been liked by ${req.params.userId}`
-  //     }
-  //   });
-  //  }
+  let exists = false;
+  for (let like_id of freet.likes) {
+    const like = await LikeCollection.findOne(like_id)
+    if (like.userId.toString() == req.session.userId && like.parentId.toString() == req.body.parentId) {
+      exists = true;
+      break;
+    }
+  }
+
+  if (exists) {
+    res.status(403).json({
+      error: {
+        doubleLiked: `Parent freet with freet ID ${req.body.parentId} has already been liked by ${req.session.userId}`
+      }
+    });
+   }
 
   next();
 };

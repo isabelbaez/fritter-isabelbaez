@@ -40,15 +40,18 @@ const formsAndHandlers = {
   'view-all-freets': viewAllFreets,
   'view-freets-by-author': viewFreetsByAuthor,
   'create-freet': createFreet,
-  'edit-freet': editFreet,
+  'like-freet': createLike,
   'delete-freet': deleteFreet,
-  'view-freet': viewFreet, // Add to formsAndHandlers to interact with on frontend
   'view-all-likes': viewAllLikes,
   'view-likes-by-author': viewLikesByAuthor,
   'create-like': createLike,
   'delete-like': deleteLike,
+  'view-all-follows': viewAllFollows,
+  'view-following': viewUserFollowing,
+  'view-followers': viewUserFollowers,
+  'create-follow' : createFollow,
+  'delete-follow' : deleteFollow
 };
-
 // Attach handlers to forms
 function init() {
   Object.entries(formsAndHandlers).forEach(([formID, handler]) => {

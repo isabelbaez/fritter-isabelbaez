@@ -1,16 +1,15 @@
 import type {HydratedDocument} from 'mongoose';
 import moment from 'moment';
 import type {Types} from 'mongoose';
-import type {Freet} from '../freet/model';
 import { User } from 'user/model';
+import { Follow } from './model';
 
 // Update this if you add a property to the Freet type!
-type FreetResponse = {
+type FollowResponse = {
   _id: string;
-  authorId: string;
+  srcUserId: string;
+  dstUserId: string;
   dateCreated: string;
-  content: string;
-  likes: string;
 };
 
 /**
@@ -28,30 +27,21 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * @param {HydratedDocument<Freet>} freet - A freet
  * @returns {FreetResponse} - The freet object formatted for the frontend
  */
-const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse => {
-  const freetCopy: Freet = {
-    ...freet.toObject({
+const constructFollowResponse = (follow: HydratedDocument<Follow>): FollowResponse => {
+  const followCopy: Follow = {
+    ...follow.toObject({
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
-
-  let freetLikes: string = '';
-
-  const likesArray = freet.likes;
-
-  for (let like of likesArray) {
-    freetLikes += like + ",";
-  }
-
   return {
-    ...freetCopy,
-    _id: freetCopy._id.toString(),
-    authorId: freetCopy.authorId.toString(),
-    dateCreated: formatDate(freet.dateCreated),
-    likes: freetLikes
+    ...followCopy,
+    _id: followCopy._id.toString(),
+    srcUserId: followCopy.srcUserId.toString(),
+    dstUserId: followCopy.dstUserId.toString(),
+    dateCreated: formatDate(follow.dateCreated),
   };
 };
 
 export {
-  constructFreetResponse
+  constructFollowResponse
 };

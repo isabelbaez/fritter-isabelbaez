@@ -26,6 +26,7 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * @returns {LikeResponse} - The freet object formatted for the frontend
  */
 const constructLikeResponse = (like: HydratedDocument<Like>): LikeResponse => {
+  
   const likeCopy: Like = {
     ...like.toObject({
       versionKey: false // Cosmetics; prevents returning of __v property
@@ -36,7 +37,7 @@ const constructLikeResponse = (like: HydratedDocument<Like>): LikeResponse => {
     ...likeCopy,
     _id: likeCopy._id.toString(),
     userId: likeCopy.userId.toString(),
-    parentId: likeCopy.userId.toString(),
+    parentId: likeCopy.parentId.toString(),
     dateCreated: formatDate(like.dateCreated),
   };
 };

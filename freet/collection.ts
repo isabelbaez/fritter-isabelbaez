@@ -2,6 +2,8 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {Freet} from './model';
 import FreetModel from './model';
 import UserCollection from '../user/collection';
+import LikeCollection from '../like/collection';
+import { Like } from '../like/model';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -69,17 +71,16 @@ class FreetCollection {
    * @param {Object} freetDetails - An object with the freet's updated details
    * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
    */
-  static async updateOne(freetId: Types.ObjectId | string, freetDetails: any): Promise<HydratedDocument<Freet>> {
+  static async updateLike(freetId: Types.ObjectId | string, likeId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
     const freet = await FreetModel.findOne({_id: freetId});
-    if (freetDetails.views) {
-      freet.views += 1;
-    }
+    const like = await LikeCollection.findOne(likeId);
 
-    if (freetDetails.content) {
-      freet.content = freetDetails.content as string;
-    }
+    const prev_likes: Array<string> = freet.likes;
 
-    freet.dateModified = new Date();
+    prev_likes.push(like._id.toString());
+
+    freet.likes = prev_likes;
+
     await freet.save();
     return freet;
   }
