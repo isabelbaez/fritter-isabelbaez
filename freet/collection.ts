@@ -3,6 +3,7 @@ import type {Freet} from './model';
 import FreetModel from './model';
 import UserCollection from '../user/collection';
 import LikeCollection from '../like/collection';
+import RefreetCollection from '../refreet/collection';
 import { Like } from '../like/model';
 
 /**
@@ -68,7 +69,7 @@ class FreetCollection {
    * Update a freet with the new content
    *
    * @param {string} freetId - The id of the freet to be updated
-   * @param {Object} freetDetails - An object with the freet's updated details
+   * @param {Object} likeId - The id of the like to be added
    * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
    */
   static async updateLike(freetId: Types.ObjectId | string, likeId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
@@ -80,6 +81,27 @@ class FreetCollection {
     prev_likes.push(like._id.toString());
 
     freet.likes = prev_likes;
+
+    await freet.save();
+    return freet;
+  }
+
+  /**
+   * Update a freet with the new content
+   *
+   * @param {string} freetId - The id of the freet to be updated
+   * @param {Object} refreetId - The id of the refreet to be added
+   * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
+   */
+    static async updateRefreet(freetId: Types.ObjectId | string, refreetId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
+    const freet = await FreetModel.findOne({_id: freetId});
+    const refreet = await RefreetCollection.findOne(refreetId);
+
+    const prev_refreets: Array<string> = freet.refreets;
+
+    prev_refreets.push(refreet._id.toString());
+
+    freet.refreets = prev_refreets;
 
     await freet.save();
     return freet;

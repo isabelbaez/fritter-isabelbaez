@@ -10,7 +10,8 @@ type FreetResponse = {
   authorId: string;
   dateCreated: string;
   content: string;
-  likes: string;
+  likes: Array<string>;
+  refreets: Array<string>;
 };
 
 /**
@@ -35,20 +36,13 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
     })
   };
 
-  let freetLikes: string = '';
-
-  const likesArray = freet.likes;
-
-  for (let like of likesArray) {
-    freetLikes += like + ",";
-  }
-
   return {
     ...freetCopy,
     _id: freetCopy._id.toString(),
     authorId: freetCopy.authorId.toString(),
     dateCreated: formatDate(freet.dateCreated),
-    likes: freetLikes
+    likes: freet.likes,
+    refreets: freet.refreets
   };
 };
 

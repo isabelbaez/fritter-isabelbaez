@@ -8,6 +8,7 @@
   <script src="/scripts/freet.js"></script>
   <script src="/scripts/user.js"></script>
   <script src="/scripts/like.js"></script>
+  <script src="/scripts/refreet.js"></script>
   <script src="/scripts/follow.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
@@ -156,6 +157,38 @@
         </div>
         <input type="submit" value="Delete Like">
       </form>
+
+      <form id="view-all-refreets">
+        <h3>View All Refreets</h3>
+        <input type="submit" value="View All Refreets">
+      </form>
+
+    <form id="view-refreets-by-author">
+      <h3>View Refreets By Author</h3>
+      <div>
+        <label for="author">Author:</label>
+        <input id="author" name="author">
+      </div>
+      <input type="submit" value="View Refreets By Author">
+    </form>
+
+    <form id="create-refreet">
+      <h3>Create Refreet</h3>
+      <div>
+        <label for="parentId">Freet ID:</label>
+        <textarea id="parentId" name="parentId"></textarea>
+      </div>
+      <input type="submit" value="Create Refreet">
+    </form>
+
+    <form id="delete-refreet">
+      <h3>Delete Refreet</h3>
+      <div>
+        <label for="id">ID:</label>
+        <input id="id" name="id">
+      </div>
+      <input type="submit" value="Delete Refreet">
+    </form>
 
       <form id="view-all-follows">
         <h3>View All Follows</h3>
