@@ -45,6 +45,17 @@ class LikeCollection {
   }
 
   /**
+   * Find a like by userId and parentId
+   *
+   * @param {string} userId - The user id of the like to find
+   * @param {string} parentId - The parent id of the like to find
+   * @return {Promise<HydratedDocument<Refreet>> | Promise<null> } - The like with the given user and parent IDs, if any
+   */
+    static async findOnebyUserFreet(userId: Types.ObjectId | string, parentId: Types.ObjectId | string): Promise<HydratedDocument<Like>> {
+    return LikeModel.findOne({userId: userId, parentId: parentId});
+  }
+
+  /**
    * Get all the freets in the database
    *
    * @return {Promise<HydratedDocument<Like>[]>} - An array of all of the freets
@@ -72,8 +83,13 @@ class LikeCollection {
    * @return {Promise<Boolean>} - true if the freet has been deleted, false otherwise
    */
   static async deleteOne(likeId: Types.ObjectId | string): Promise<boolean> {
-    const like = await LikeModel.deleteOne({_id: likeId});
-    return like !== null;
+  
+    const like = await LikeCollection.findOne(likeId);
+    const delLike = await LikeModel.deleteOne({_id: likeId});
+
+    FreetCollection.removeLike(like.parentId,likeId);
+    
+    return delLike !== null;
   }
 
   /**

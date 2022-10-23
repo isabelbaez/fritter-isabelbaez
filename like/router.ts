@@ -87,13 +87,19 @@ router.post(
  * @throws {404} - If the freetId is not valid
  */
 router.delete(
-  '/:likeId?',
+  '/:parentId?',
   [
     userValidator.isUserLoggedIn,
     likeValidator.isLikeExists,
   ],
   async (req: Request, res: Response) => {
-    await LikeCollection.deleteOne(req.params.likeId);
+
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const parentId = (req.params.parentId as string) ?? '';
+
+    const like = await LikeCollection.findOnebyUserFreet(req.session.userId, parentId);
+    
+    await LikeCollection.deleteOne(like._id);
     res.status(200).json({
       message: 'Your like was deleted successfully.'
     });

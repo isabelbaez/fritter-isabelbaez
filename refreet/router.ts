@@ -87,13 +87,19 @@ router.post(
  * @throws {404} - If the freetId is not valid
  */
 router.delete(
-  '/:refreetId?',
+  '/:parentId?',
   [
     userValidator.isUserLoggedIn,
     refreetValidator.isRefreetExists,
   ],
   async (req: Request, res: Response) => {
-    await RefreetCollection.deleteOne(req.params.refreetId);
+
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const parentId = (req.params.parentId as string) ?? '';
+
+    const refreet = await RefreetCollection.findOnebyUserFreet(req.session.userId, parentId);
+    
+    await RefreetCollection.deleteOne(refreet._id);
     res.status(200).json({
       message: 'Your refreet was deleted successfully.'
     });

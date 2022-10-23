@@ -9,13 +9,14 @@ import RefreetCollection from '../refreet/collection';
  */
 
  const isRefreetExists = async (req: Request, res: Response, next: NextFunction) => {
-  const validFormat = Types.ObjectId.isValid(req.params.refreetId);
-  const refreet = validFormat ? await RefreetCollection.findOne(req.params.refreetId) : '';
+
+  const validFormat = Types.ObjectId.isValid(req.params.parentId);
+  const refreet = validFormat ? await RefreetCollection.findOnebyUserFreet(req.session.userId,req.params.parentId) : '';
 
   if (!refreet) {
     res.status(404).json({
       error: {
-        refreetNotFound: `Refreet with refreet ID ${req.params.refreetId} does not exist.`
+        refreetNotFound: `Refreet with user ID ${req.session.userId} and parent ID ${req.params.parentId} does not exist.`
       }
     });
     return;

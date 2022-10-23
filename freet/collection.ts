@@ -86,6 +86,30 @@ class FreetCollection {
     return freet;
   }
 
+    /**
+   * Update a freet with the new content
+   *
+   * @param {string} freetId - The id of the freet to be updated
+   * @param {Object} likeId - The id of the like to be added
+   * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
+   */
+    static async removeLike(freetId: Types.ObjectId | string, likeId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
+    const freet = await FreetModel.findOne({_id: freetId});
+
+    const prev_likes: Array<string> = freet.likes;
+    const new_likes: Array<string> = [];
+
+    for (let like of prev_likes) {
+      if (like != likeId) {
+        new_likes.push(like);
+      }
+    }
+    freet.likes = new_likes;
+
+    await freet.save();
+    return freet;
+  }
+
   /**
    * Update a freet with the new content
    *
@@ -107,6 +131,31 @@ class FreetCollection {
     return freet;
   }
 
+  /**
+   * Update a freet with the new content
+   *
+   * @param {string} freetId - The id of the freet to be updated
+   * @param {Object} refreetId - The id of the refreet to be added
+   * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
+   */
+    static async removeRefreet(freetId: Types.ObjectId | string, refreetId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
+    const freet = await FreetModel.findOne({_id: freetId});
+
+    const prev_refreets: Array<string> = freet.refreets;
+    const new_refreets: Array<string> = [];
+
+    for (let refreet of prev_refreets) {
+      if (refreet != refreetId) {
+        new_refreets.push(refreet);
+      }
+    }
+
+    freet.refreets = new_refreets;
+
+    await freet.save();
+    return freet;
+  }
+  
   /**
    * Delete a freet with given freetId.
    *

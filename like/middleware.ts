@@ -9,18 +9,18 @@ import LikeCollection from '../like/collection';
  */
 
  const isLikeExists = async (req: Request, res: Response, next: NextFunction) => {
-  const validFormat = Types.ObjectId.isValid(req.params.likeId);
-  const like = validFormat ? await LikeCollection.findOne(req.params.likeId) : '';
+
+  const validFormat = Types.ObjectId.isValid(req.params.parentId);
+  const like = validFormat ? await LikeCollection.findOnebyUserFreet(req.session.userId,req.params.parentId) : '';
 
   if (!like) {
     res.status(404).json({
       error: {
-        likeNotFound: `Like with like ID ${req.params.likeId} does not exist.`
+        likeNotFound: `Like with user ID ${req.session.userId} and parent ID ${req.params.parentId} does not exist.`
       }
     });
     return;
   }
-
   next();
 };
 

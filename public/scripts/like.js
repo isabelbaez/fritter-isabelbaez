@@ -25,7 +25,7 @@
   }
   
   function deleteLike(fields) {
-    fetch(`/api/likes/${fields.id}`, {method: 'DELETE'})
+    fetch(`/api/likes/${fields.parentId}`, {method: 'DELETE'})
       .then(showResponse)
       .catch(showResponse);
   }

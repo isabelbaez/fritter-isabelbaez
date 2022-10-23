@@ -25,7 +25,7 @@ fetch('/api/refreets', {method: 'POST', body: JSON.stringify(fields), headers: {
 }
 
 function deleteRefreet(fields) {
-fetch(`/api/refreets/${fields.id}`, {method: 'DELETE'})
+fetch(`/api/refreets/${fields.parentId}`, {method: 'DELETE'})
     .then(showResponse)
     .catch(showResponse);
 }

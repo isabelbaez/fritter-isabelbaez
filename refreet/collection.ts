@@ -46,6 +46,17 @@ class RefreetCollection {
   }
 
   /**
+   * Find a refreet by refreet
+   *
+   * @param {string} userId - The user id of the refreet to find
+   * @param {string} parentId - The parent id of the refreet to find
+   * @return {Promise<HydratedDocument<Refreet>> | Promise<null> } - The refreet with the given refreet, if any
+   */
+    static async findOnebyUserFreet(userId: Types.ObjectId | string, parentId: Types.ObjectId | string): Promise<HydratedDocument<Refreet>> {
+    return RefreetModel.findOne({userId: userId, parentId: parentId});
+  }
+
+  /**
    * Get all the refreets in the database
    *
    * @return {Promise<HydratedDocument<Refreet>[]>} - An array of all of the refreets
@@ -73,8 +84,13 @@ class RefreetCollection {
    * @return {Promise<Boolean>} - true if the refreet has been deleted, false otherwise
    */
   static async deleteOne(refreetId: Types.ObjectId | string): Promise<boolean> {
-    const refreet = await RefreetModel.deleteOne({_id: refreetId});
-    return refreet !== null;
+
+    const refreet = await RefreetCollection.findOne(refreetId);
+    const delRefreet = await RefreetModel.deleteOne({_id: refreetId});
+    
+    FreetCollection.removeRefreet(refreet.parentId,refreetId);
+
+    return delRefreet !== null;
   }
 
   /**
