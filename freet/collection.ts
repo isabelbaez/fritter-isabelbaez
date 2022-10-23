@@ -4,7 +4,9 @@ import FreetModel from './model';
 import UserCollection from '../user/collection';
 import LikeCollection from '../like/collection';
 import RefreetCollection from '../refreet/collection';
+import CommentCollection from '../comment/collection';
 import { Like } from '../like/model';
+import CommentModel from 'comment/model';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -78,7 +80,7 @@ class FreetCollection {
 
     const prev_likes: Array<string> = freet.likes;
 
-    prev_likes.push(like._id.toString());
+    prev_likes.push(likeId.toString());
 
     freet.likes = prev_likes;
 
@@ -123,7 +125,7 @@ class FreetCollection {
 
     const prev_refreets: Array<string> = freet.refreets;
 
-    prev_refreets.push(refreet._id.toString());
+    prev_refreets.push(refreetId.toString());
 
     freet.refreets = prev_refreets;
 
@@ -155,6 +157,52 @@ class FreetCollection {
     await freet.save();
     return freet;
   }
+
+  /**
+   * Update a freet with the new content
+   *
+   * @param {string} freetId - The id of the freet to be updated
+   * @param {Object} refreetId - The id of the refreet to be added
+   * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
+   */
+  static async updateComment(freetId: Types.ObjectId | string, commentId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
+    const freet = await FreetModel.findOne({_id: freetId});
+    const comment = await CommentCollection.findOne(commentId);
+
+    const prevComments: Array<string> = freet.comments;
+
+    prevComments.push(commentId.toString());
+
+    freet.comments = prevComments;
+
+    await freet.save();
+    return freet;
+  }
+  
+  /**
+   * Update a freet with the new content
+   *
+   * @param {string} freetId - The id of the freet to be updated
+   * @param {Object} refreetId - The id of the refreet to be added
+   * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
+   */
+  static async removeComment(freetId: Types.ObjectId | string, commentId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
+    const freet = await FreetModel.findOne({_id: freetId});
+
+    const prevComments: Array<string> = freet.comments;
+    const newComments: Array<string> = [];
+
+    for (let comment of prevComments) {
+      if (comment != commentId) {
+        newComments.push(comment);
+      }
+    }
+
+    freet.comments = newComments;
+
+    await freet.save();
+    return freet;
+  }
   
   /**
    * Delete a freet with given freetId.
@@ -163,8 +211,23 @@ class FreetCollection {
    * @return {Promise<Boolean>} - true if the freet has been deleted, false otherwise
    */
   static async deleteOne(freetId: Types.ObjectId | string): Promise<boolean> {
-    const freet = await FreetModel.deleteOne({_id: freetId});
-    return freet !== null;
+
+    const freet = await FreetModel.findOne({_id: freetId});
+
+    for (let comment of freet.comments) {
+      await CommentCollection.deleteOne(comment);
+    }
+
+    for (let like of freet.likes) {
+      await LikeCollection.deleteOne(like);
+    }
+
+    for (let refreet of freet.refreets) {
+      await RefreetCollection.deleteOne(refreet);
+    }
+
+    const delFreet = await FreetModel.deleteOne({_id: freetId});
+    return delFreet !== null;
   }
 
   /**

@@ -29,7 +29,7 @@ class RefreetCollection {
       dateCreated: date,
     });
 
-    FreetCollection.updateRefreet(parentId, refreet._id);
+    await FreetCollection.updateRefreet(parentId, refreet._id);
 
     await refreet.save(); // Saves freet to MongoDB
     return refreet;
@@ -88,7 +88,7 @@ class RefreetCollection {
     const refreet = await RefreetCollection.findOne(refreetId);
     const delRefreet = await RefreetModel.deleteOne({_id: refreetId});
     
-    FreetCollection.removeRefreet(refreet.parentId,refreetId);
+    await FreetCollection.removeRefreet(refreet.parentId,refreetId);
 
     return delRefreet !== null;
   }

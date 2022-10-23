@@ -54,7 +54,11 @@ const formsAndHandlers = {
   'view-following': viewUserFollowing,
   'view-followers': viewUserFollowers,
   'create-follow' : createFollow,
-  'delete-follow' : deleteFollow
+  'delete-follow' : deleteFollow,
+  'view-all-comments': viewAllComments,
+  'view-comments-by-author': viewCommentsByAuthor,
+  'create-comment': createComment,
+  'delete-comment': deleteComment,
 };
 // Attach handlers to forms
 function init() {

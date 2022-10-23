@@ -4,6 +4,7 @@ import LikeModel from './model';
 import UserCollection from '../user/collection';
 import FreetModel from 'freet/model';
 import FreetCollection from '../freet/collection';
+import CommentCollection from '../comment/collection';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -29,7 +30,14 @@ class LikeCollection {
       dateCreated: date,
     });
 
-    FreetCollection.updateLike(parentId, like._id);
+    const freet = await FreetCollection.findOne(parentId);
+ 
+    if (freet) {
+      FreetCollection.updateLike(parentId, like._id);
+    } else {
+      CommentCollection.updateLike(parentId, like._id);
+    }
+
     await like.save(); // Saves freet to MongoDB
     return like;
   }
@@ -87,7 +95,13 @@ class LikeCollection {
     const like = await LikeCollection.findOne(likeId);
     const delLike = await LikeModel.deleteOne({_id: likeId});
 
-    FreetCollection.removeLike(like.parentId,likeId);
+    const freet = await FreetCollection.findOne(like.parentId);
+ 
+    if (freet) {
+      await FreetCollection.removeLike(like.parentId,likeId);
+    } else {
+      await CommentCollection.removeLike(like.parentId,likeId);
+    }
     
     return delLike !== null;
   }
