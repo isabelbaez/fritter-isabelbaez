@@ -6,15 +6,8 @@
  * e.g. for createUser, fields has properites 'username' and 'password'
  */
 
-  
-function viewUserFeed(fields) {
-  fetch(`/api/feeds`)
-    .then(showResponse)
-    .catch(showResponse);
-}
-
-function refreshUserFeed(fields) {
-  fetch(`/api/feeds/`, {method: 'PUT'})
+function searchUsers(fields) {
+fetch(`/api/search/`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
     .then(showResponse)
     .catch(showResponse);
 }

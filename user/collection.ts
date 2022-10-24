@@ -4,6 +4,7 @@ import type {User} from './model';
 import UserModel from './model';
 import { Freet } from 'freet/model';
 import FreetCollection from 'freet/collection';
+import SearchCollection from '../search/collection';
 
 /**
  * This file contains a class with functionality to interact with users stored
@@ -28,6 +29,7 @@ class UserCollection {
     await user.save(); // Saves user to MongoDB
 
     await FeedCollection.addOne(user._id);
+    await SearchCollection.addOne(user._id);
 
     return user;
   }
@@ -64,6 +66,16 @@ class UserCollection {
       username: new RegExp(`^${username.trim()}$`, 'i'),
       password
     });
+  }
+
+  /**
+   * Get all the users in the database
+   *
+   * @return {Promise<HydratedDocument<Freet>[]>} - An array of all of the users
+   */
+  static async findAll(): Promise<Array<HydratedDocument<User>>> {
+    // Retrieves freets and sorts them from most to least recent
+    return UserModel.find({}).sort({dateJoined: -1});
   }
 
   /**
@@ -328,6 +340,9 @@ class UserCollection {
     
     const userFeed = await FeedCollection.findOneByUser(userId);
     await FeedCollection.deleteOne(userFeed._id); 
+
+    const userSearch = await SearchCollection.findOneByUser(userId);
+    await SearchCollection.deleteOne(userSearch._id); 
 
     return user !== null;
   }

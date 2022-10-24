@@ -39,6 +39,7 @@ const formsAndHandlers = {
   'sign-out': signOut,
   'show-feed': viewUserFeed,
   'refresh-feed': refreshUserFeed,
+  'search-users': searchUsers,
   'view-all-freets': viewAllFreets,
   'view-freets-by-author': viewFreetsByAuthor,
   'create-freet': createFreet,

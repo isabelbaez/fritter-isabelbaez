@@ -90,8 +90,8 @@ class FeedCollection {
    * @return {Promise<Boolean>} - true if the freet has been deleted, false otherwise
    */
   static async deleteOne(feedId: Types.ObjectId | string): Promise<boolean> {
-    const delFreet = await FeedModel.deleteOne({_id: feedId});
-    return delFreet !== null;
+    const delFeed = await FeedModel.deleteOne({_id: feedId});
+    return delFeed !== null;
   }
 
   /**
