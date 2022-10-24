@@ -100,6 +100,7 @@ router.delete(
     const refreet = await RefreetCollection.findOnebyUserFreet(req.session.userId, parentId);
     
     await RefreetCollection.deleteOne(refreet._id);
+    
     res.status(200).json({
       message: 'Your refreet was deleted successfully.'
     });

@@ -1,3 +1,4 @@
+import FeedCollection from '../feed/collection';
 import type {HydratedDocument, Types} from 'mongoose';
 import type {User} from './model';
 import UserModel from './model';
@@ -23,6 +24,9 @@ class UserCollection {
 
     const user = new UserModel({username, password, dateJoined});
     await user.save(); // Saves user to MongoDB
+
+    await FeedCollection.addOne(user._id);
+
     return user;
   }
 
@@ -89,6 +93,10 @@ class UserCollection {
    */
   static async deleteOne(userId: Types.ObjectId | string): Promise<boolean> {
     const user = await UserModel.deleteOne({_id: userId});
+    
+    const userFeed = await FeedCollection.findOneByUser(userId);
+    await FeedCollection.deleteOne(userFeed._id); 
+
     return user !== null;
   }
 }
