@@ -30,6 +30,8 @@ class LikeCollection {
       dateCreated: date,
     });
 
+    await like.save(); // Saves freet to MongoDB
+
     const freet = await FreetCollection.findOne(parentId);
  
     if (freet) {
@@ -38,7 +40,9 @@ class LikeCollection {
       CommentCollection.updateLike(parentId, like._id);
     }
 
-    await like.save(); // Saves freet to MongoDB
+    const user = await UserCollection.findOneByUserId(userId);
+    await UserCollection.updateLike(user._id, like._id);
+
     return like;
   }
 
@@ -102,6 +106,9 @@ class LikeCollection {
     } else {
       await CommentCollection.removeLike(like.parentId,likeId);
     }
+
+    const user = await UserCollection.findOneByUserId(like.userId);
+    await UserCollection.removeLike(user._id, like._id);
     
     return delLike !== null;
   }

@@ -27,6 +27,13 @@ class FollowCollection {
       dateCreated: date,
     });
     await follow.save(); // Saves freet to MongoDB
+
+    const srcUser = await UserCollection.findOneByUserId(srcUserId);
+    await UserCollection.updateFollowing(srcUser._id, follow._id);
+
+    const dstUser = await UserCollection.findOneByUserId(dstUserId);
+    await UserCollection.updateFollower(dstUser._id, follow._id);
+
     return follow;
   }
 
@@ -79,8 +86,17 @@ class FollowCollection {
    * @return {Promise<Boolean>} - true if the freet has been deleted, false otherwise
    */
   static async deleteOne(followId: Types.ObjectId | string): Promise<boolean> {
-    const follow = await FollowModel.deleteOne({_id: followId});
-    return follow !== null;
+
+    const follow = await FollowModel.findOne({_id: followId});
+
+    const srcUser = await UserCollection.findOneByUserId(follow.srcUserId);
+    await UserCollection.removeFollowing(srcUser._id, followId);
+
+    const dstUser = await UserCollection.findOneByUserId(follow.dstUserId);
+    await UserCollection.removeFollower(dstUser._id, followId);
+
+    const delFollow = await FollowModel.deleteOne({_id: followId});
+    return delFollow !== null;
   }
 
 }

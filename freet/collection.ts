@@ -32,7 +32,12 @@ class FreetCollection {
       content,
       dateModified: date
     });
+
     await freet.save(); // Saves freet to MongoDB
+
+    const user = await UserCollection.findOneByUserId(authorId);
+    await UserCollection.updateFreet(user._id, freet._id);
+
     return freet;
   }
 
@@ -225,6 +230,9 @@ class FreetCollection {
     for (let refreet of freet.refreets) {
       await RefreetCollection.deleteOne(refreet);
     }
+
+    const user = await UserCollection.findOneByUserId(freet.authorId);
+    await UserCollection.removeFreet(user._id, freet._id);
 
     const delFreet = await FreetModel.deleteOne({_id: freetId});
     return delFreet !== null;

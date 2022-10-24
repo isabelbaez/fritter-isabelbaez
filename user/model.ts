@@ -12,6 +12,11 @@ export type User = {
   username: string;
   password: string;
   dateJoined: Date;
+  followers: Array<string>;
+  following: Array<string>;
+  freets: Array<string>;
+  comments: Array<string>;
+  likes: Array<string>;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -32,7 +37,27 @@ const UserSchema = new Schema({
   dateJoined: {
     type: Date,
     required: true
-  }
+  },
+  followers: {
+    type: [String],
+    default: Array<string>()
+  },
+  following: {
+    type: [String],
+    default: Array<string>()
+  },
+  freets: {
+    type: [String],
+    default: Array<string>()
+  },
+  comments: {
+    type: [String],
+    default: Array<string>()
+  },
+  likes: {
+    type: [String],
+    default: Array<string>()
+  },
 });
 
 const UserModel = model<User>('User', UserSchema);

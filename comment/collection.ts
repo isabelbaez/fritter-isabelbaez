@@ -31,6 +31,8 @@ class CommentCollection {
       content,
     });
 
+    await comment.save(); // Saves freet to MongoDB
+
     const freet = await FreetCollection.findOne(parentId);
  
     if (freet) {
@@ -39,7 +41,9 @@ class CommentCollection {
       CommentCollection.updateComment(parentId, comment._id);
     }
 
-    await comment.save(); // Saves freet to MongoDB
+    const user = await UserCollection.findOneByUserId(authorId);
+    await UserCollection.updateComment(user._id, comment._id);
+
     return comment;
   }
 
@@ -191,6 +195,9 @@ class CommentCollection {
     for (let reply of comment.comments) {
       await CommentCollection.deleteOne(reply);
     }
+
+    const user = await UserCollection.findOneByUserId(comment.authorId);
+    await UserCollection.removeComment(user._id, comment._id);
 
     const delComment = await CommentModel.deleteOne({_id: commentId});
     return delComment !== null;
