@@ -13,6 +13,7 @@
   <script src="/scripts/follow.js"></script>
   <script src="/scripts/feed.js"></script>
   <script src="/scripts/search.js"></script>
+  <script src="/scripts/contestCredibility.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -59,6 +60,18 @@
             <input id="password" name="password">
           </div>
           <input type="submit" value="Change Password">
+        </form>
+
+        <form id="enable-user-credibility-score">
+          <h3>Enable User Credibility Score</h3>
+          <input type="checkbox" id="enable" name="enable">
+          <input type="submit" value="Enable User Credibility Score">
+        </form>
+
+        <form id="disable-user-credibility-score">
+          <h3>Disable User Credibility Score</h3>
+          <input type="checkbox" id="disable" name="disable">
+          <input type="submit" value="Disable User Credibility Score">
         </form>
 
         <form id="sign-in">
@@ -122,15 +135,6 @@
           <input type="submit" value="Create Freet">
         </form>
 
-        <form id="like-freet">
-          <h3>Like Freet</h3>
-          <div>
-            <label for="id">ID:</label>
-            <input id="id" name="id">
-          </div>
-          <input type="submit" value="Like Freet">
-        </form>
-
         <form id="view-freet">
           <h3>Increment Views on Freet</h3>
           <div>
@@ -147,6 +151,19 @@
             <input id="id" name="id">
           </div>
           <input type="submit" value="Delete Freet">
+        </form>
+
+        <form id="contest-credibility-score">
+          <h3>Contest Credibility</h3>
+          <div>
+            <label for="freetId">Parent Freet ID:</label>
+            <textarea id="freetId" name="freetId"></textarea>
+            <input type="checkbox" id="inFavor" name="inFavor"> In Favor? </input>
+            <text> List your sources here, with no whitespace, and separated by commas.</text>
+            <label for="sources">Sources:</label>
+            <textarea id="sources" name="sources"></textarea>
+          </div>
+          <input type="submit" value="Contest Credibility">
         </form>
 
         <form id="view-all-likes">
@@ -166,7 +183,7 @@
       <form id="create-like">
         <h3>Create Like</h3>
         <div>
-          <label for="parentId">Freet ID:</label>
+          <label for="parentId">Parent Freet ID:</label>
           <textarea id="parentId" name="parentId"></textarea>
         </div>
         <input type="submit" value="Create Like">
@@ -175,7 +192,7 @@
       <form id="delete-like">
         <h3>Delete Like</h3>
         <div>
-          <label for="parentId">Freet ID:</label>
+          <label for="parentId">Parent Freet ID:</label>
           <textarea id="parentId" name="parentId"></textarea>
         </div>
         <input type="submit" value="Delete Like">
@@ -198,7 +215,7 @@
       <form id="create-refreet">
         <h3>Create Refreet</h3>
         <div>
-          <label for="parentId">Freet ID:</label>
+          <label for="parentId">Parent Freet ID:</label>
           <textarea id="parentId" name="parentId"></textarea>
         </div>
         <input type="submit" value="Create Refreet">
@@ -207,7 +224,7 @@
       <form id="delete-refreet">
         <h3>Delete Refreet</h3>
         <div>
-          <label for="parentId">Freet ID:</label>
+          <label for="parentId">Parent Freet ID:</label>
           <textarea id="parentId" name="parentId"></textarea>
         </div>
         <input type="submit" value="Delete Refreet">
@@ -230,7 +247,7 @@
       <form id="create-comment">
         <h3>Create Comment</h3>
         <div>
-          <label for="parentId">Freet ID:</label>
+          <label for="parentId">Parent Freet ID:</label>
           <textarea id="parentId" name="parentId"></textarea>
           <label for="content">Content:</label>
           <textarea id="content" name="content"></textarea>
@@ -241,8 +258,8 @@
       <form id="delete-comment">
         <h3>Delete Comment</h3>
         <div>
-          <label for="parentId">Freet ID:</label>
-          <textarea id="parentId" name="parentId"></textarea>
+          <label for="commentId">Comment ID:</label>
+          <textarea id="commentId" name="commentId"></textarea>
         </div>
         <input type="submit" value="Delete Comment">
       </form>
@@ -280,7 +297,7 @@
       </form>
 
       <form id="delete-follow">
-        <h3>Delete Freet</h3>
+        <h3>Delete Follow</h3>
         <div>
           <label for="id">ID:</label>
           <input id="id" name="id">

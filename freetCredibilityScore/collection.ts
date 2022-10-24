@@ -1,3 +1,4 @@
+import ContestCredibilityCollection from '../contestCredibility/collection';
 import type {HydratedDocument, Types} from 'mongoose';
 import type {FreetCredibilityScore} from './model';
 import FreetCredibilityScoreModel from './model';
@@ -56,10 +57,26 @@ class FreetCredibilityScoreCollection {
    * Get all the freets in by given author
    *
    * @param {string} username - The username of author of the freets
-   * @return {Promise<HydratedDocument<Like>[]>} - An array of all of the freets
+   * @return {Promise<HydratedDocument<FreetCredibilityScore>[]>} - The score
    */
   static async findOneByParent (parentId: Types.ObjectId | string): Promise<HydratedDocument<FreetCredibilityScore>> {
     return FreetCredibilityScoreModel.findOne({parentId: parentId});
+  }
+
+  /**
+   * Update a score
+   *
+   * @param {string} scoreId - The id of the score to update
+   * @return {Promise<HydratedDocument<FreetCredibilityScore>[]>} - The updated score
+   */
+  static async updateScore (scoreId: Types.ObjectId | string, delta: number): Promise<HydratedDocument<FreetCredibilityScore>> {
+    
+    const score =  await FreetCredibilityScoreModel.findOne({_id: scoreId});
+
+    score.value += delta;
+    await score.save(); // Saves freet to MongoDB
+    // set state for Freet
+    return score;
   }
 
   /**
@@ -73,7 +90,11 @@ class FreetCredibilityScoreCollection {
     const score = await FreetCredibilityScoreModel.findOne({_id: scoreId});
     const delScore = await FreetCredibilityScoreModel.deleteOne({_id: scoreId});
 
-    // Remove score from freet
+    const contests = await ContestCredibilityCollection.findAllByParent(scoreId);
+
+    for (const contest of contests) {
+      ContestCredibilityCollection.deleteOne(contest._id);
+    }
     
     return delScore !== null;
   }

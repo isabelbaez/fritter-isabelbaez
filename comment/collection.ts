@@ -113,7 +113,7 @@ class CommentCollection {
     const new_likes: Array<string> = [];
 
     for (let like of prev_likes) {
-      if (like != likeId) {
+      if (like !== likeId) {
         new_likes.push(like);
       }
     }
@@ -159,7 +159,7 @@ class CommentCollection {
     const newComments: Array<string> = [];
 
     for (let comment of prevComments) {
-      if (comment != commentId) {
+      if (comment !== commentId) {
         newComments.push(comment);
       }
     }
@@ -201,15 +201,6 @@ class CommentCollection {
 
     const delComment = await CommentModel.deleteOne({_id: commentId});
     return delComment !== null;
-  }
-
-  /**
-   * Delete all the freets by the given author
-   *
-   * @param {string} authorId - The id of author of freets
-   */
-  static async deleteMany(authorId: Types.ObjectId | string): Promise<void> {
-    await CommentModel.deleteMany({authorId});
   }
 }
 

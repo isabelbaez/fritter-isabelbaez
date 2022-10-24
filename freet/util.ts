@@ -37,6 +37,14 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
     })
   };
 
+  let credScore: string;
+
+  if (!freetCopy.credibilityScoreId) {
+    credScore = "Disabled";
+  } else {
+    credScore = freetCopy.credibilityScoreId.toString();
+  }
+
   return {
     ...freetCopy,
     _id: freetCopy._id.toString(),
@@ -44,7 +52,7 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
     dateCreated: formatDate(freet.dateCreated),
     likes: freetCopy.likes,
     refreets: freetCopy.refreets,
-    credibilityScoreId: freetCopy.credibilityScoreId.toString()
+    credibilityScoreId: credScore
   };
 };
 

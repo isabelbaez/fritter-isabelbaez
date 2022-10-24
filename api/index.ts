@@ -17,6 +17,8 @@ import {refreetRouter} from '../refreet/router';
 import {commentRouter} from '../comment/router';
 import {feedRouter} from '../feed/router';
 import {searchRouter} from '../search/router';
+import {contestCredibilityRouter} from '../contestCredibility/router';
+
 
 // Load environmental variables
 dotenv.config({});
@@ -88,6 +90,7 @@ app.use('/api/refreets', refreetRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/feeds', feedRouter);
 app.use('/api/search', searchRouter);
+app.use('/api/contestCredibility', contestCredibilityRouter);
 
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {

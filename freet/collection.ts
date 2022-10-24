@@ -130,7 +130,7 @@ class FreetCollection {
     const new_likes: Array<string> = [];
 
     for (let like of prev_likes) {
-      if (like != likeId) {
+      if (like !== likeId) {
         new_likes.push(like);
       }
     }
@@ -175,7 +175,7 @@ class FreetCollection {
     const new_refreets: Array<string> = [];
 
     for (let refreet of prev_refreets) {
-      if (refreet != refreetId) {
+      if (refreet !== refreetId) {
         new_refreets.push(refreet);
       }
     }
@@ -221,7 +221,7 @@ class FreetCollection {
     const newComments: Array<string> = [];
 
     for (let comment of prevComments) {
-      if (comment != commentId) {
+      if (comment !== commentId) {
         newComments.push(comment);
       }
     }
@@ -257,11 +257,11 @@ class FreetCollection {
     const user = await UserCollection.findOneByUserId(freet.authorId);
     await UserCollection.removeFreet(user._id, freet._id);
 
-    const delFreet = await FreetModel.deleteOne({_id: freetId});
-
-    if (freet.credibilityScoreId) {
+    if (freet.credibilityScoreId !== undefined) {
       await FreetCredibilityScoreCollection.deleteOne(freet.credibilityScoreId);
     }
+
+    const delFreet = await FreetModel.deleteOne({_id: freetId});
 
     return delFreet !== null;
   }

@@ -35,7 +35,7 @@ const isValidFollow = async (req: Request, res: Response, next: NextFunction) =>
   let already_following = false;
 
   for (let follow of following) {
-    if (follow.dstUserId == req.body.dstUserId) {
+    if (follow.dstUserId === req.body.dstUserId) {
       already_following = true;
       break;
     }

@@ -68,11 +68,15 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    let freet;
 
-    const sourcesString = (req.body.sources as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const sources = sourcesString.split(',');
-
-    const freet = await FreetCollection.addOne(userId, req.body.content, sources);
+    if (req.body.sources) {
+      const sourcesString = (req.body.sources as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+      const sources = sourcesString.split(',');
+      freet = await FreetCollection.addOne(userId, req.body.content, sources);
+    } else {
+      freet = await FreetCollection.addOne(userId, req.body.content);
+    }
 
     res.status(201).json({
       message: 'Your freet was created successfully.',

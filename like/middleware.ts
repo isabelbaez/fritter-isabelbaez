@@ -43,7 +43,7 @@ const isValidLikeParent = async (req: Request, res: Response, next: NextFunction
   if (freet) {
     for (let like_id of freet.likes) {
       const like = await LikeCollection.findOne(like_id)
-      if (like.userId.toString() == req.session.userId && like.parentId.toString() == req.body.parentId) {
+      if (like.userId.toString() === req.session.userId && like.parentId.toString() === req.body.parentId) {
         exists = true;
         break;
       }
@@ -51,7 +51,7 @@ const isValidLikeParent = async (req: Request, res: Response, next: NextFunction
   } else if (comment) {
     for (let like_id of comment.likes) {
       const like = await LikeCollection.findOne(like_id)
-      if (like.userId.toString() == req.session.userId && like.parentId.toString() == req.body.parentId) {
+      if (like.userId.toString() === req.session.userId && like.parentId.toString() === req.body.parentId) {
         exists = true;
         break;
       }

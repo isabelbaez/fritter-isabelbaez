@@ -12,6 +12,7 @@ export type User = {
   username: string;
   password: string;
   dateJoined: Date;
+  credibilityScore: number | "Disabled";
   followers: Array<string>;
   following: Array<string>;
   freets: Array<string>;
@@ -37,6 +38,10 @@ const UserSchema = new Schema({
   dateJoined: {
     type: Date,
     required: true
+  },
+  credibilityScore: {
+    type: Schema.Types.Mixed,
+    default: "Disabled"
   },
   followers: {
     type: [String],

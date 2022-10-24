@@ -1,4 +1,4 @@
-import type {Request, Response} from 'express';
+import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
 import FreetCollection from '../freet/collection';
 import UserCollection from './collection';
@@ -108,6 +108,20 @@ router.post(
  */
 router.put(
   '/',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+
+    if (!req.body.disable && !req.body.enable) {
+      next();
+      return;
+    }
+
+    const user = await UserCollection.updateOne(userId, req.body);
+    res.status(200).json({
+      message: 'Your profile was updated successfully.',
+      user: util.constructUserResponse(user)
+    });
+  },
   [
     userValidator.isUserLoggedIn,
     userValidator.isValidUsername,

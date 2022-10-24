@@ -3,8 +3,13 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {User} from './model';
 import UserModel from './model';
 import { Freet } from 'freet/model';
-import FreetCollection from 'freet/collection';
+import FreetCollection from '../freet/collection';
 import SearchCollection from '../search/collection';
+import LikeCollection from '../like/collection';
+import RefreetCollection from '../refreet/collection';
+import FreetCredibilityScoreCollection from '../freetCredibilityScore/collection';
+import CommentCollection from '../comment/collection';
+import FollowCollection from '../follow/collection';
 
 /**
  * This file contains a class with functionality to interact with users stored
@@ -95,9 +100,64 @@ class UserCollection {
       user.username = userDetails.username as string;
     }
 
+    if (userDetails.enable) {
+      await UserCollection.enableUserCredibilityScore(userId);
+    }
+
+    if (userDetails.disable) {
+      await UserCollection.disableUserCredibilityScore(userId);
+    }
+
     await user.save();
     return user;
   }
+
+  /**
+   * Enable a user's credibility score
+   *
+   * @param {string} userId - The userId of the user to update
+   * @return {Promise<HydratedDocument<User>>} - The updated user
+   */
+  static async enableUserCredibilityScore(userId: Types.ObjectId | string): Promise<HydratedDocument<User>> {
+    const user = await UserModel.findOne({_id: userId});
+
+    const userFreets = user.freets;
+    let totalFreetScore = 0.0;
+    let totalScoredFreets = 0;
+
+    for (const freetId of userFreets) {
+      const freet = await FreetCollection.findOne(freetId);
+      if (freet.authorId.toString() === user._id.toString() && (freet.credibilityScoreId !== undefined)) {
+        const score = await FreetCredibilityScoreCollection.findOne(freet.credibilityScoreId);
+        totalFreetScore += score.value;
+        totalScoredFreets += 1;
+      }
+    }
+
+    if (totalScoredFreets == 0) {
+      user.credibilityScore = "Disabled";
+    } else {
+      user.credibilityScore = totalFreetScore/totalScoredFreets;
+    }
+
+    await user.save();
+    return user;
+  }
+
+  /**
+   * Disable a user's credibility score
+   *
+   * @param {string} userId - The userId of the user to update
+   * @return {Promise<HydratedDocument<User>>} - The updated user
+   */
+  static async disableUserCredibilityScore(userId: Types.ObjectId | string): Promise<HydratedDocument<User>> {
+    const user = await UserModel.findOne({_id: userId});
+    user.credibilityScore = "Disabled";
+
+    await user.save();
+    return user;
+  }
+  
   
   /**
    * Update a user with the new content
@@ -111,7 +171,9 @@ class UserCollection {
     const user =  await UserModel.findOne({_id: userId});
     const freets: Array<string> = user.freets;
 
-    freets.push(freetId.toString());
+    if (!(freets.includes(freetId.toString()))) {
+      freets.push(freetId.toString());
+    }
 
     user.freets = freets;
 
@@ -134,7 +196,7 @@ class UserCollection {
     const new_freets: Array<string> = [];
 
     for (let freet of prev_freets) {
-      if (freet != freetId) {
+      if (freet !== freetId) {
         new_freets.push(freet);
       }
     }
@@ -180,7 +242,7 @@ class UserCollection {
     const new_likes: Array<string> = [];
 
     for (let like of prev_likes) {
-      if (like != likeId) {
+      if (like !== likeId) {
         new_likes.push(like);
       }
     }
@@ -226,7 +288,7 @@ class UserCollection {
     const new_comments: Array<string> = [];
 
     for (let comment of prev_comments) {
-      if (comment != commentId) {
+      if (comment !== commentId) {
         new_comments.push(comment);
       }
     }
@@ -272,7 +334,7 @@ class UserCollection {
     const new_followers: Array<string> = [];
 
     for (let follower of prev_followers) {
-      if (follower != followerId) {
+      if (follower !== followerId) {
         new_followers.push(follower);
       }
     }
@@ -318,7 +380,7 @@ class UserCollection {
     const new_following: Array<string> = [];
 
     for (let following of prev_following) {
-      if (following != followingId) {
+      if (following !== followingId) {
         new_following.push(following);
       }
     }
@@ -336,7 +398,7 @@ class UserCollection {
    * @return {Promise<Boolean>} - true if the user has been deleted, false otherwise
    */
   static async deleteOne(userId: Types.ObjectId | string): Promise<boolean> {
-    const user = await UserModel.deleteOne({_id: userId});
+    const user = await UserModel.findById({_id: userId});
     
     const userFeed = await FeedCollection.findOneByUser(userId);
     await FeedCollection.deleteOne(userFeed._id); 
@@ -344,7 +406,36 @@ class UserCollection {
     const userSearch = await SearchCollection.findOneByUser(userId);
     await SearchCollection.deleteOne(userSearch._id); 
 
-    return user !== null;
+    const freets = await FreetCollection.findAllByUsername(user.username);
+
+    for (const follow of user.followers) {
+      await FollowCollection.deleteOne(follow);
+    }
+
+    for (const follow of user.following) {
+      await FollowCollection.deleteOne(follow);
+    }
+
+    for (const like of user.likes) {
+      await LikeCollection.deleteOne(like);
+    }
+
+    for (const comment of user.comments) {
+      await CommentCollection.deleteOne(comment);
+    }
+
+    const refreets = await RefreetCollection.findAllByUsername(user.username);
+    
+    for (const refreet of refreets) {
+      await RefreetCollection.deleteOne(refreet._id);
+    }
+
+    for (const freet of freets) {
+      await FreetCollection.deleteOne(freet._id);
+    }
+
+    const delUser = await UserModel.deleteOne({_id: userId});
+    return delUser !== null;
   }
 }
 

@@ -25,7 +25,7 @@
   }
   
   function deleteComment(fields) {
-    fetch(`/api/comments/${fields.parentId}`, {method: 'DELETE'})
+    fetch(`/api/comments/${fields.commentId}`, {method: 'DELETE'})
       .then(showResponse)
       .catch(showResponse);
   }

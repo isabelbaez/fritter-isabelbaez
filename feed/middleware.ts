@@ -31,7 +31,7 @@ const isValidNewFeed = async (req: Request, res: Response, next: NextFunction) =
   const allFeeds = await FeedCollection.findAll();
 
   for (let feed of allFeeds) {
-    if (feed.viewerId == req.session.userId) {
+    if (feed.viewerId === req.session.userId) {
       res.status(400).json({
         error: 'Each user may only have one feed.'
       });

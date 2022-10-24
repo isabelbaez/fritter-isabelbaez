@@ -43,7 +43,7 @@ router.get(
   ],
   async (req: Request, res: Response, next: NextFunction) => {
 
-    if (req.query.followers == "true") {
+    if (req.query.followers === "true") {
       next();
       return;
     }

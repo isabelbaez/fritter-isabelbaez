@@ -41,7 +41,7 @@ const isValidRefreetParent = async (req: Request, res: Response, next: NextFunct
   let exists = false;
   for (let refreet_id of freet.refreets) {
     const refreet = await RefreetCollection.findOne(refreet_id)
-    if (refreet.userId.toString() == req.session.userId && refreet.parentId.toString() == req.body.parentId) {
+    if (refreet.userId.toString() === req.session.userId && refreet.parentId.toString() === req.body.parentId) {
       exists = true;
       break;
     }

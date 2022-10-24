@@ -96,7 +96,7 @@ class SearchCollection {
       }
     }
 
-    if (content.length == 0) {
+    if (content.length === 0) {
       users = [];
     }
 
