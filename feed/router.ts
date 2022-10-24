@@ -4,6 +4,7 @@ import FeedCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as feedValidator from '../feed/middleware';
 import * as util from './util';
+import CredibilityFilteringCollection from '../credibilityFiltering/collection';
 
 const router = express.Router();
 
@@ -90,6 +91,25 @@ router.put(
       return;
     }
 
+    const filter = await CredibilityFilteringCollection.findOneByFeed(feed._id);
+
+    let unscored = true;
+    let highScored = true;;
+    let lowScored = true;
+
+    if (!req.body.unscored) {
+      unscored = false;
+    }
+
+    if (!req.body.highScored) {
+      highScored = false;
+    }
+
+    if (!req.body.lowScored) {
+      lowScored = false;
+    }
+
+    await CredibilityFilteringCollection.updateFiltering(filter._id, unscored, highScored, lowScored);
     await FeedCollection.updateFeed(feed._id);
 
     res.status(200).json({

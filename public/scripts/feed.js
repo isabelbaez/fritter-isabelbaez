@@ -14,7 +14,7 @@ function viewUserFeed(fields) {
 }
 
 function refreshUserFeed(fields) {
-  fetch(`/api/feeds/`, {method: 'PUT'})
+  fetch(`/api/feeds/`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
     .then(showResponse)
     .catch(showResponse);
 }

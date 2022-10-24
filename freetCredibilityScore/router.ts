@@ -107,4 +107,4 @@ router.delete(
   }
 );
 
-export {router as freetCredibilityScoreCollectionRouter};
+export {router as freetCredibilityScoreRouter};

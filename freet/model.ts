@@ -2,7 +2,7 @@ import LikeModel, { Like } from '../like/model';
 import type {Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import LikeCollection from 'like/collection';
-import { freetCredibilityScoreCollectionRouter } from 'freetCredibilityScore/router';
+import { freetCredibilityScoreRouter } from 'freetCredibilityScore/router';
 
 /**
  * This file defines the properties stored in a Freet

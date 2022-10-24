@@ -73,7 +73,9 @@ class FreetCredibilityScoreCollection {
     
     const score =  await FreetCredibilityScoreModel.findOne({_id: scoreId});
 
-    score.value += delta;
+    const newVal = Math.max(Math.min(score.value + delta,5.0),0.0);
+
+    score.value = newVal;
     await score.save(); // Saves freet to MongoDB
     // set state for Freet
     return score;

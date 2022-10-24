@@ -12,6 +12,7 @@ import LikeCollection from 'like/collection';
 export type Feed = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   viewerId: Types.ObjectId;
+  filterId: Types.ObjectId;
   freets: Array<string>;
 };
 
@@ -26,6 +27,11 @@ const FeedSchema = new Schema<Feed>({
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'User'
+  },
+  filterId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'CredibilityFiltering'
   },
   freets: {
     type: [String],

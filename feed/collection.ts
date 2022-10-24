@@ -10,6 +10,8 @@ import CommentModel from 'comment/model';
 import FollowCollection from '../follow/collection';
 import FreetCollection from '../freet/collection';
 import { isUserLoggedIn } from 'user/middleware';
+import CredibilityFilteringCollection from '../credibilityFiltering/collection';
+import FreetCredibilityScoreCollection from '../freetCredibilityScore/collection';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -28,14 +30,20 @@ class FeedCollection {
    */
   static async addOne(viewerId: Types.ObjectId | string): Promise<HydratedDocument<Feed>> {
     let viewerFreetIds: Array<string> = [];
-    
+
+    const standInID = 0;
+
     const feed = new FeedModel({
       viewerId,
+      standInID,
       viewerFreetIds,
     });
 
-    await feed.save(); // Saves freet to MongoDB
+    const filter = await CredibilityFilteringCollection.addOne(feed._id);
 
+    feed.filterId = filter._id;
+
+    await feed.save(); // Saves freet to MongoDB
     await FeedCollection.updateFeed(feed._id);
 
     return feed;
@@ -90,6 +98,12 @@ class FeedCollection {
    * @return {Promise<Boolean>} - true if the freet has been deleted, false otherwise
    */
   static async deleteOne(feedId: Types.ObjectId | string): Promise<boolean> {
+
+    const feed = await FeedModel.findOne({_id: feedId});
+    const filterId = feed.filterId;
+
+    await CredibilityFilteringCollection.deleteOne(filterId);
+
     const delFeed = await FeedModel.deleteOne({_id: feedId});
     return delFeed !== null;
   }
@@ -107,7 +121,10 @@ class FeedCollection {
     const viewer = await UserCollection.findOneByUserId(feed.viewerId);
     const viewerFollowing = await FollowCollection.findAllFollowing(viewer.username);
 
-    let viewerFreetIds: Array<string> = [];
+    const filter = await CredibilityFilteringCollection.findOne(feed.filterId);
+
+    let unfilteredFreetIds: Array<string> = [];
+    const viewerFreetIds: Array<string> = [];
 
     for (let follow of viewerFollowing) {
 
@@ -118,15 +135,34 @@ class FeedCollection {
       const comments = await CommentCollection.findAllByUsername(user.username);
 
       for (let freet of freets) {
-        viewerFreetIds.push(freet._id.toString());
+        unfilteredFreetIds.push(freet._id.toString());
       }
 
       for (let refreet of refreets) {
-        viewerFreetIds.push(refreet.parentId.toString());
+        unfilteredFreetIds.push(refreet.parentId.toString());
       }
 
       for (let comment of comments) {
-        viewerFreetIds.push(comment.parentId.toString());
+        unfilteredFreetIds.push(comment.parentId.toString());
+      }
+    }
+
+    for (const freetId of unfilteredFreetIds) {
+      const unfilteredFreet = await FreetCollection.findOne(freetId);
+
+      const credScoreId = unfilteredFreet.credibilityScoreId;
+
+      if (!credScoreId) {
+        if (filter.unscoredFreets) {
+          viewerFreetIds.push(freetId);
+        }
+      } else {
+        const credScore = await FreetCredibilityScoreCollection.findOne(credScoreId);
+        if (credScore.value < 3.5) {
+          if (filter.lowScoredFreets) {  viewerFreetIds.push(freetId); }
+        } else if (credScore.value >= 3.5) {
+          if (filter.highScoredFreets) { viewerFreetIds.push(freetId); }
+        }
       }
     }
 
