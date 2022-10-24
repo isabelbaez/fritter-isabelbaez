@@ -12,6 +12,7 @@ import FreetCollection from '../freet/collection';
 import { isUserLoggedIn } from 'user/middleware';
 import CredibilityFilteringCollection from '../credibilityFiltering/collection';
 import FreetCredibilityScoreCollection from '../freetCredibilityScore/collection';
+import { User } from '../user/model';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -126,9 +127,16 @@ class FeedCollection {
     let unfilteredFreetIds: Array<string> = [];
     const viewerFreetIds: Array<string> = [];
 
-    for (let follow of viewerFollowing) {
+    const relevantUsers: Array<User> = [];
 
+    for (let follow of viewerFollowing) {
       const user = await UserCollection.findOneByUserId(follow.dstUserId);
+      relevantUsers.push(user);
+    }
+
+    relevantUsers.push(viewer);
+
+    for (let user of relevantUsers) {
 
       const freets = await FreetCollection.findAllByUsername(user.username);
       const refreets = await RefreetCollection.findAllByUsername(user.username);
