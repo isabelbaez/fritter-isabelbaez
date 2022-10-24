@@ -12,6 +12,7 @@ type FreetResponse = {
   content: string;
   likes: Array<string>;
   refreets: Array<string>;
+  credibilityScoreId: string;
 };
 
 /**
@@ -41,8 +42,9 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
     _id: freetCopy._id.toString(),
     authorId: freetCopy.authorId.toString(),
     dateCreated: formatDate(freet.dateCreated),
-    likes: freet.likes,
-    refreets: freet.refreets
+    likes: freetCopy.likes,
+    refreets: freetCopy.refreets,
+    credibilityScoreId: freetCopy.credibilityScoreId.toString()
   };
 };
 

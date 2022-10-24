@@ -2,6 +2,7 @@ import LikeModel, { Like } from '../like/model';
 import type {Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import LikeCollection from 'like/collection';
+import { freetCredibilityScoreCollectionRouter } from 'freetCredibilityScore/router';
 
 /**
  * This file defines the properties stored in a Freet
@@ -14,6 +15,7 @@ export type Freet = {
   authorId: Types.ObjectId;
   dateCreated: Date;
   content: string;
+  credibilityScoreId: Types.ObjectId;
   likes: Array<string>; // Add a new field called "views" with the number type to the interface
   refreets: Array<string>;
   comments: Array<string>;
@@ -42,6 +44,10 @@ const FreetSchema = new Schema<Freet>({
   content: {
     type: String,
     required: true
+  },
+  credibilityScoreId: {
+    type: Schema.Types.ObjectId,
+    required: false
   },
   // Add views field to the schema
   likes: {

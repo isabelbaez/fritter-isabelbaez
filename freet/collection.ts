@@ -7,6 +7,7 @@ import RefreetCollection from '../refreet/collection';
 import CommentCollection from '../comment/collection';
 import { Like } from '../like/model';
 import CommentModel from 'comment/model';
+import FreetCredibilityScoreCollection from '../freetCredibilityScore/collection';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -24,9 +25,9 @@ class FreetCollection {
    * @param {string} content - The id of the content of the freet
    * @return {Promise<HydratedDocument<Freet>>} - The newly created freet
    */
-  static async addOne(authorId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Freet>> {
+  static async addOne(authorId: Types.ObjectId | string, content: string, sources?: Array<string>): Promise<HydratedDocument<Freet>> {
     const date = new Date();
-    const freet = new FreetModel({
+    let freet = new FreetModel({
       authorId,
       dateCreated: date,
       content,
@@ -34,6 +35,11 @@ class FreetCollection {
     });
 
     await freet.save(); // Saves freet to MongoDB
+
+    if (sources) {
+      const score = await FreetCredibilityScoreCollection.addOne(freet._id, sources);
+      freet = await FreetCollection.updateScore(freet._id, score._id);
+    }
 
     const user = await UserCollection.findOneByUserId(authorId);
     await UserCollection.updateFreet(user._id, freet._id);
@@ -70,6 +76,23 @@ class FreetCollection {
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Freet>>> {
     const author = await UserCollection.findOneByUsername(username);
     return FreetModel.find({authorId: author._id});
+  }
+
+  /**
+   * Update a freet with the new content
+   *
+   * @param {string} freetId - The id of the freet to be updated
+   * @param {Object} scoreId - The id of the score to be added
+   * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
+   */
+   static async updateScore(freetId: Types.ObjectId | string, scoreId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
+    const freet = await FreetModel.findOne({_id: freetId});
+    const score = await FreetCredibilityScoreCollection.findOne(scoreId);
+
+    freet.credibilityScoreId = score._id;
+
+    await freet.save();
+    return freet;
   }
 
   /**
@@ -235,16 +258,12 @@ class FreetCollection {
     await UserCollection.removeFreet(user._id, freet._id);
 
     const delFreet = await FreetModel.deleteOne({_id: freetId});
-    return delFreet !== null;
-  }
 
-  /**
-   * Delete all the freets by the given author
-   *
-   * @param {string} authorId - The id of author of freets
-   */
-  static async deleteMany(authorId: Types.ObjectId | string): Promise<void> {
-    await FreetModel.deleteMany({authorId});
+    if (freet.credibilityScoreId) {
+      await FreetCredibilityScoreCollection.deleteOne(freet.credibilityScoreId);
+    }
+
+    return delFreet !== null;
   }
 }
 
