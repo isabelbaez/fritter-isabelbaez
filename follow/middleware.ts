@@ -22,6 +22,25 @@ const isFollowExists = async (req: Request, res: Response, next: NextFunction) =
 };
 
 /**
+ * Checks if a follow with followId is req.params exists
+ */
+ const isValidUnfollow = async (req: Request, res: Response, next: NextFunction) => {
+
+  const follow = await FollowCollection.findOne(req.params.followId);
+  const dtsUser = follow.dstUserId.toString();
+
+  if (follow.srcUserId.toString() !== req.session.userId.toString()) {
+    res.status(403).json({
+      error: {
+        notValidUnfollow: `User with user ID ${req.session.userId} is not the source user in follow with ID ${req.params.followId}.`
+      }
+    });
+    return;
+  }
+  next();
+};
+
+/**
  * Checks if the new follow is not an existing follow.
  */
 const isValidFollow = async (req: Request, res: Response, next: NextFunction) => {
@@ -30,12 +49,10 @@ const isValidFollow = async (req: Request, res: Response, next: NextFunction) =>
 
   const following = await FollowCollection.findAllFollowing(user.username);
 
-  console.log(req.session.username)
-
   let already_following = false;
 
   for (let follow of following) {
-    if (follow.dstUserId === req.body.dstUserId) {
+    if (follow.dstUserId.toString() === req.body.dstUserId.toString()) {
       already_following = true;
       break;
     }
@@ -55,4 +72,5 @@ const isValidFollow = async (req: Request, res: Response, next: NextFunction) =>
 export {
   isValidFollow,
   isFollowExists,
+  isValidUnfollow
 };

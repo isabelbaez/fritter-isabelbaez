@@ -121,12 +121,11 @@ class UserCollection {
   static async enableUserCredibilityScore(userId: Types.ObjectId | string): Promise<HydratedDocument<User>> {
     const user = await UserModel.findOne({_id: userId});
 
-    const userFreets = user.freets;
+    const userFreets = await FreetCollection.findAllByUsername(user.username);
     let totalFreetScore = 0.0;
     let totalScoredFreets = 0;
 
-    for (const freetId of userFreets) {
-      const freet = await FreetCollection.findOne(freetId);
+    for (const freet of userFreets) {
       if (freet.authorId.toString() === user._id.toString() && (freet.credibilityScoreId !== undefined)) {
         const score = await FreetCredibilityScoreCollection.findOne(freet.credibilityScoreId);
         totalFreetScore += score.value;

@@ -108,6 +108,9 @@ router.post(
  */
 router.put(
   '/',
+  [
+    userValidator.isUserLoggedIn,
+  ],
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
 

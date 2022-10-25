@@ -41,7 +41,7 @@ const isValidRefreetParent = async (req: Request, res: Response, next: NextFunct
   let exists = false;
   for (let refreet_id of freet.refreets) {
     const refreet = await RefreetCollection.findOne(refreet_id)
-    if (refreet.userId.toString() === req.session.userId && refreet.parentId.toString() === req.body.parentId) {
+    if (refreet.userId.toString() === req.session.userId.toString() && refreet.parentId.toString() === req.body.parentId.toString()) {
       exists = true;
       break;
     }
@@ -53,6 +53,7 @@ const isValidRefreetParent = async (req: Request, res: Response, next: NextFunct
         doubleRefreeted: `Parent freet with freet ID ${req.body.parentId} has already been refreeted by ${req.session.userId}`
       }
     });
+    return;
    }
 
   next();

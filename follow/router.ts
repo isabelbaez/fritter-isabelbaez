@@ -47,7 +47,6 @@ router.get(
       next();
       return;
     }
-    console.log("in following");
     const userFollowing = await FollowCollection.findAllFollowing(req.query.author as string);
     const response = userFollowing.map(util.constructFollowResponse);
     res.status(200).json(response);
@@ -56,7 +55,6 @@ router.get(
     userValidator.isAuthorExists
   ],
   async (req: Request, res: Response) => {
-    console.log("in followers");
     const userFollowers = await FollowCollection.findAllFollowers(req.query.author as string);
     const response = userFollowers.map(util.constructFollowResponse);
     res.status(200).json(response);
@@ -107,11 +105,12 @@ router.delete(
   [
     userValidator.isUserLoggedIn,
     followValidator.isFollowExists,
+    followValidator.isValidUnfollow
   ],
   async (req: Request, res: Response) => {
     await FollowCollection.deleteOne(req.params.followId);
     res.status(200).json({
-      message: 'Your freet was deleted successfully.'
+      message: 'Your follow was deleted successfully.'
     });
   }
 );

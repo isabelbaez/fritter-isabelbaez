@@ -13,7 +13,7 @@ const router = express.Router();
  *
  * @name GET /api/freets
  *
- * @return {LikeResponse[]} - A list of all the freets sorted in descending
+ * @return {FilterResponse[]} - A list of all the freets sorted in descending
  *                      order by date modified
  */
 /**
@@ -21,7 +21,7 @@ const router = express.Router();
  *
  * @name GET /api/freets?authorId=id
  *
- * @return {LikeResponse[]} - An array of freets created by user with id, authorId
+ * @return {FilterResponse[]} - An array of freets created by user with id, authorId
  * @throws {400} - If authorId is not given
  * @throws {404} - If no user has given authorId
  *
@@ -40,7 +40,7 @@ router.get(
     res.status(200).json(response);
   },
   [
-    userValidator.isAuthorExists
+    filterValidator.isValidFilterFeed
   ],
   async (req: Request, res: Response) => {
 
@@ -65,7 +65,6 @@ router.get(
 router.post(
   '/',
   [
-    userValidator.isUserLoggedIn,
     filterValidator.isValidFilterFeed
   ],
   async (req: Request, res: Response) => {
@@ -73,7 +72,7 @@ router.post(
     const filter = await CredibilityFilteringCollection.addOne(req.body.feedId);
 
     res.status(201).json({
-      message: 'Your score was created successfully.',
+      message: 'Your filter was created successfully.',
       filter: util.constructFilterResponse(filter)
     });
   }

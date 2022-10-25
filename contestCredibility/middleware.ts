@@ -53,14 +53,12 @@ const isValidContestFreet = async (req: Request, res: Response, next: NextFuncti
 
   const score = freet.credibilityScoreId;
   if (score === undefined) {
-    if (!freet) {
-      res.status(404).json({
-        error: {
-          scoreNotFound: `Freet with ID ${req.body.freetId} does not have a credibility score.`
-        }
-      });
-      return;
-    }
+    res.status(404).json({
+      error: {
+        scoreNotFound: `Freet with ID ${req.body.freetId} does not have a credibility score.`
+      }
+    });
+    return;
   }
   next();
 };

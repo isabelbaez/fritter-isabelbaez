@@ -10,10 +10,10 @@ const router = express.Router();
 /**
  * Get all the freets
  *
- * @name GET /api/freets
+ * @name GET /api/contestCredibility
  *
- * @return {LikeResponse[]} - A list of all the freets sorted in descending
- *                      order by date modified
+ * @return {ContestResponse[]} - A list of all the contests
+ *              
  */
 /**
  * Get freets by author.
@@ -39,7 +39,7 @@ router.get(
     res.status(200).json(response);
   },
   [
-    userValidator.isAuthorExists
+    contestValidator.isValidContestFreet
   ],
   async (req: Request, res: Response) => {
 
@@ -58,7 +58,6 @@ router.get(
  * @param {string} like - The content of the freet
  * @return {LikeResponse} - The created freet
  * @throws {403} - If the user is not logged in
- * @throws {400} - If the freet content is empty or a stream of empty spaces
  * @throws {413} - If the freet content is more than 140 characters long
  */
 router.post(

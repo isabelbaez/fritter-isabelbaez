@@ -90,13 +90,13 @@ class RefreetCollection {
   static async deleteOne(refreetId: Types.ObjectId | string): Promise<boolean> {
 
     const refreet = await RefreetCollection.findOne(refreetId);
-    const delRefreet = await RefreetModel.deleteOne({_id: refreetId});
     
     await FreetCollection.removeRefreet(refreet.parentId,refreetId);
 
     const user = await UserCollection.findOneByUserId(refreet.userId);
     await UserCollection.removeFreet(user._id, refreet.parentId);
 
+    const delRefreet = await RefreetModel.deleteOne({_id: refreetId});
     return delRefreet !== null;
   }
 

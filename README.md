@@ -195,11 +195,269 @@ The following api routes have already been implemented for you (**Make sure to d
 
 This renders the `index.html` file that will be used to interact with the backend
 
+
+#### `GET /api/comments?author=USERNAME` - Get comments by author
+
+**Returns**
+
+- An array of comments created by user with username author
+
+**Throws**
+
+- `400` if author is not given
+- `404` if author is not a recognized username of any user
+
+
+#### `GET /api/comments` - Get all comments
+
+**Returns**
+
+- An array of all comments 
+
+
+#### `POST /api/comments ` - Create a new comment
+
+**Body**
+
+- `content` _{string}_ - The content of the comment
+- `parentId` _{string}_ - the ID of the freet being commented on 
+
+
+**Returns**
+
+- •	A success message
+- A object with the created comment
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` If the comment content is empty or a stream of empty spaces
+- `413` If the comment content is more than 140 characters long
+- `404` if the parent ID provided is not an existing Freet
+
+
+
+#### `DELETE /api/comments/:commentId? ` - Delete an existing comment
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in/is not the author of the comment
+- `404` if the comment ID provided is not an existing Comment
+
+
+__________________________
+
+#### `GET /api/contestCredibility` - Get all contests
+
+**Returns**
+
+- An array of all contests 
+
+
+#### `GET /api/contestCredibility?freetId=FREETID` - Get a contest for the given Freet
+
+**Returns**
+
+- An contest, if any, previously created for the specified Freet
+
+**Throws**
+
+- `400` if freet ID is not given
+- `404` if no freet with the specfied ID exists
+
+
+#### `POST /api/contestCredibility ` - Create a new contest
+
+**Body**
+
+- `freetId` _{string}_ - the ID of the freet which's score is being contested
+- `sources` _{string}_ - A list of sources 
+- `inFavor` _{boolean}_ - A boolean determining if the cred score of the Freet should be higher
+
+
+**Returns**
+
+- •	A success message
+- A object with the created contest
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freet ID provided is not an existing Freet
+
+
+#### `DELETE /api/contestCredibility/:contestId? ` - Delete an existing comment
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `404` if the contest ID provided is not an existing Contest
+
+______________________________
+
+#### `GET /api/credibilityFiltering` - Get all contests
+
+**Returns**
+
+- An array of all credibility filters 
+
+#### `GET /api/credibilityFiltering?feedId=FREETID` - Get a filter for the given Feed
+
+**Returns**
+
+- The filter belonging to the specified Feed
+
+**Throws**
+
+- `403` if the user is not logged in
+
+
+#### `POST /api/credibilityFiltering ` - Create a new filter
+
+**Body**
+
+- `feedId` _{string}_ - the ID of the parent feed of the filter
+
+**Returns**
+
+- •	A success message
+- A object with the created filter
+
+**Throws**
+
+- `404` if the feed ID provided is not an existing Feed
+
+
+#### `DELETE /api/credibilityFiltering/:filterId? ` - Delete an existing filter
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `404` if the filter ID provided is not an existing Credibility Filter
+
+______________________________
+
+#### `GET /api/feeds` - Get feed for the logged-in user
+
+**Returns**
+
+- The feed belonging to the logged in user
+
+**Throws**
+
+- `403` if the user is not logged ins
+
+
+#### `POST /api/feeds ` - Create a new Feed for the logged-in user
+
+
+**Returns**
+
+- A success message
+- A object with the created feed
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` if the logged-in user already has a feed
+
+
+#### `PUT /api/feeds ` - Edit the current logged-in user's Feed
+
+**Body**
+
+- `unscored` _{boolean}_ - a boolean determining if unscored Freets will be in the user's feed
+- `highScored` _{boolean}_ - a boolean determining if high scored Freets will be in the user's feed
+- `lowScored` _{boolean}_ - a boolean determining if low scored Freets will be in the user's feed
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the feed for the logged-in user is not found
+
+______________________________
+
+#### `GET /api/follows` - Get all follows
+
+**Returns**
+
+- An array composed of all existing follows
+
+#### `GET /api/follows/author=USERNME&followers=TRUE` - Get a user's followers
+
+**Returns**
+
+- An array composed of all follow objects in which the specified user is the followed user
+
+**Throws**
+
+- `400` if author or followers is not given
+- `404` if author is not a recognized username of any user
+
+
+#### `GET /api/follows/author=USERNME&following=TRUE` - Get a user's following
+
+**Returns**
+
+- An array composed of all follow objects in which the specified user is the following user
+
+**Throws**
+
+- `400` if author or following is not given
+- `404` if author is not a recognized username of any user
+
+
+#### `POST /api/follows ` - Have logged-in user follow another user
+
+
+**Body**
+
+- `dstUserId` _{string}_ -  the user ID for the user being followed by the logged-in user
+
+
+**Returns**
+
+- A success message
+- A object with the created follow
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if dstUserId is not an existing user
+
+
+#### `DELETE /api/credibilityFiltering/:followId? ` - Delete an existing follow interaction
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `404` if the follow ID provided is not an existing Follow
+- `403` if the user is not logged-in or if the logged-in user is not the source user in the Follow object
+
+______________________________
+
 #### `GET /api/freets` - Get all the freets
 
 **Returns**
 
-- An array of all freets sorted in descending order by date modified
+- An array of all freets sorted in descending order by date creates
 
 #### `GET /api/freets?author=USERNAME` - Get freets by author
 
@@ -217,6 +475,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Body**
 
 - `content` _{string}_ - The content of the freet
+- `sources` _{string}_ (optional) - A list of sources if the Freet will have a credibility score
 
 **Returns**
 
@@ -241,24 +500,182 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not the author of the freet
 - `404` if the freetId is invalid
 
-#### `PUT /api/freets/:freetId?` - Update an existing freet
+_______________________
+
+#### `GET /api/freetCredibilityScore?parentId=ID` - Get score for given parent Freet
+
+**Returns**
+
+- An credibility sccore for the specfied Freet
+
+**Throws**
+
+- `400` if parentId is not given
+- `404` if author is not a recognized username of any user
+
+
+#### `GET /api/freetCredibilityScore` - Get all scores
+
+**Returns**
+
+- An array of all credibility scores 
+
+
+#### `POST /api/freetCredibilityScore ` - Create a new credibility score
 
 **Body**
 
-- `content` _{string}_ - The new content of the freet
+- `parentId` _{string}_ - the ID of the freet being scored
+- `sources` _{string}_ - A list of sourcs to calculate value of the score
+
 
 **Returns**
 
 - A success message
-- An object with the updated freet
+- A object with the created score
+
+**Throws**
+- `404` if the parent ID provided is not an existing Freet
+
+______________________
+
+#### `GET /api/likes` - Get all likes
+
+**Returns**
+
+- An array of all likes 
+
+#### `GET /api/likes?author=USERNAME` - Get likes by author
+
+**Returns**
+
+- An array of likes created by user with username author
+
+**Throws**
+
+- `400` if author is not given
+- `404` if author is not a recognized username of any user
+
+
+#### `POST /api/likes ` - Create a new like by logged-in user
+
+**Body**
+
+- `parentId` _{string}_ - the ID of the freet being liked
+
+**Returns**
+
+- A success message
+- A object with the created like
 
 **Throws**
 
 - `403` if the user is not logged in
-- `404` if the freetId is invalid
-- `403` if the user is not the author of the freet
-- `400` if the new freet content is empty or a stream of empty spaces
-- `413` if the new freet content is more than 140 characters long
+- `404` if the parent ID provided is not an existing Freet
+
+
+#### `DELETE /api/likes/:parentId? ` - Delete an existing like by logged-in user
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the parent ID provided is not an existing Freet
+- `400` if the logged-in user has not liked the Freet with the parent ID provided
+
+______________________
+
+#### `GET /api/refreets` - Get all refreets
+
+**Returns**
+
+- An array of all refreets 
+
+#### `GET /api/refreets?author=USERNAME` - Get refreets by author
+
+**Returns**
+
+- An array of refreets created by user with username author
+
+**Throws**
+
+- `400` if author is not given
+- `404` if author is not a recognized username of any user
+
+
+#### `POST /api/refreets ` - Create a new refreet by logged-in user
+
+**Body**
+
+- `parentId` _{string}_ - the ID of the freet being refreeted
+
+
+**Returns**
+
+- A success message
+- A object with the created like
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the parent ID provided is not an existing Freet
+
+
+#### `DELETE /api/refreets/:parentId? ` - Delete an existing refreet by logged-in user
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the parent ID provided is not an existing Freet or or is not liked by the logged-in user
+
+______________________
+
+#### `GET /api/search?author=USERNAME` - Get a user's Search object
+
+**Returns**
+
+- A search object whose viewer is the logged-in user
+
+**Throws**
+
+- `403` if user is not logged-in
+
+______________________
+
+#### `GET /api/search?author=USERNAME` - Get a user's Search
+
+**Returns**
+
+- A search object whose viewer is the logged-in user
+
+**Throws**
+
+- `403` if user is not logged-in
+
+#### `PUT /api/search` - Update a search object to find users
+
+**Body**
+
+- `content` _{string}_ - the text to be searched within the valid usernames
+
+**Returns**
+
+- A success message
+- A object with the updated search
+
+**Throws**
+
+- `403` if user is not logged-in
+- `404` if the user search object cannot be found
+
+______________________
 
 #### `POST /api/users/session` - Sign in user
 
@@ -311,7 +728,9 @@ This renders the `index.html` file that will be used to interact with the backen
 **Body** _(no need to add fields that are not being changed)_
 
 - `username` _{string}_ - The user's username
-- `password` _{string}_ - The user's password
+- `password` _{string}_ - The user's password'
+- `enable` _{boolean}_ - A boolean determining if the user's credibility score should be enabled
+- `disable` _{boolean}_ - A boolean determining if the user's credibility score should be disabled
 
 **Returns**
 
@@ -333,251 +752,3 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
-
-
-
-#### `GET /api/freets?author=USERNAME` - Get all of a user’s freets
-
-**Returns**
-
-- A set of all existing Freets with an author attribute of USERNAME, sorted from most recent to least recent (based on datePosted attribute). 
-
-**Throws**
-
-- `400`  if author is not given
-- `404` error if author is not an existing username. 
-
-
-#### `GET /api/freets?liked=USERNAME` - Get all of a user’s liked freets
-
-**Returns**
-
-A set of all existing Freets which’s likes attribute includes a user with USERNAME, sorted from most recent to least recent (based on datePosted attribute). 
-
-**Throws**
-
-- `400`  if author is not given
-- `404` error if author is not an existing username. 
-
-#### `GET /api/freets?commented=USERNAME` - Get all of a user’s commented freets
-
-**Returns**
-
-A set of all existing Freets which’s comments attribute includes a comment with an author attribute of USERNAME, sorted from most recent to least recent (based on datePosted attribute). 
-
-**Throws**
-
-Throws 400 error if commented is not given or 404 error if commented  is not an existing username.
-
-
-#### `POST /api/follow/:USERNAME` - Follow a User
-
-Adds logged-in user to USERNAME User’s followers attribute. Adds USERNAME User to logged-in user’s following attribute. 
-
-**Throws**
-
-Throws 400 error if USERNAME is not given or 404 error if USERNAME  is not an existing username. 
-
-
-#### `DELETE /api/follow/:USERNAME` - Unfollow a User
-
-Removes logged-in user to USERNAME User’s followers attribute. Removes USERNAME User to logged-in user’s following attribute.  
-
-**Throws**
-
-Throws 400 error if USERNAME is not given or 404 error if USERNAME  is not an existing username. 
-
-
-#### `POST /api/freets` - Post a Freet
-
-**Body:**
-
-- content {string} – content of Freet
-
-- media {Image} – media content of Freet
-
-- credScoreEnabled{Boolean} – checks if cred score is enabled. 
-
-Creates a Freet by logged-in user. 
-
-**Throws**
-
-Throws 403 error if user is not logged in or 400 error if the content of the Freet is not valid (empty or too long). 
-
-
-#### `DELETE /api/refreets/:freetId?` - Delete a Freet
-
-Deletes a Freet freetId. 
-
-**Throws**
-
-Throws 400 error if freetId is not given or 404 error if freetId is not an existing Freet. 
-
-
-#### `GET /api/users?userString=USERSTRING` - Finding Users
-
-Returns a set of all existing Users with a username attribute that contains the string “USERSTRING”. 
-
-**Throws**
-
-Throws 400 error if userString is not given. 
-
-
-#### `POST /api/likes/:USERNAME` - Like a Freet
-
-**Body:**
-
-- freetId {string} – parent Freet
-
-Adds a like by USERNAME user to some FREETID Freet.
-
-**Throws**
-
-Throws 400 error if USERNAME is not given or 404 error if USERNAME  is not an existing username. 
-
-
-#### `DELETE	/api/likes/:likeId?` - Unlike a Freet
-
-Deletes a like likeId. 
-
-**Throws**
-
-Throws 400 error if likeId is not given or 404 error if likeId is not an existing like. 
-
-
-#### `POST /api/refreets/:USERNAME` - Refreet a Freet
-
-**Body:**
-
-- freetId {string} – parent Freet
-
-Adds a refreet by USERNAME user to some FREETID Freet . 
-
-**Throws**
-
-Throws 400 error if USERNAME is not given or 404 error if USERNAME  is not an existing username. 
-
-
-#### `DELETE /api/refreets/:refreetId?` - Remove Refreet from a Freet
-
-Deletes a refreet refreetId. 
-
-**Throws**
-
-Throws 400 error if refreetId is not given or 404 error if refreetId is not an existing refreet. 
-
-
-#### `POST /api/refreets/:USERNAME` - Post a Comment
-
-**Body:**
-
-- freetId {string} – parent Freet
-
-- content {string} – content of Comment
-
-Adds a comment by USERNAME user to some FREETID Freet . 
-
-**Throws**
-
-Throws 400 error if USERNAME is not given or 404 error if USERNAME  is not an existing username. 
-
-
-#### `DELETE /api/refreets/:commentId?` - Remove a Comment
-
-Deletes a comment commentId. 
-
-**Throws**
-
-Throws 400 error if commentId is not given or 404 error if commentId is not an existing comment. 
-
-
-#### `POST /api/threads` - Post a Thread
-
-**Body:**
-
-- content {Array<Freets>} – content of Thread
-
-- credScoreEnabled{Boolean} – checks if cred score is enabled. 
-
-Creates a Thread by logged-in user. 
-
-**Throws**
-
-Throws 403 error if user is not logged in.  
-
-
-#### `DELETE /api/threads/:threadId?` - Delete a Thread
-
-Deletes a Thread threadId. 
-
-**Throws**
-
-Throws 400 error if threadId is not given or 404 error if threadId is not an existing Thread. 
-
-
-#### `POST /api/FreetCredScore/` - Set FreetCredibilityScore
-
-**Body:**
-
-- freetId {string} – parent Freet
-
-- sources {Array<string>} – List of sources
-
-**Returns**
-
-Returns a credibility value based on the provided sources. 
-
-**Throws**
-
-Throws 400 error if freetId is not given or 404 error if freetId is not an existing Freet. 
-
-
-#### `POST /api/contestCredScore/` - Set ContestCredibilityScore
-
-**Body:**
-
-- freetId {string} – parent Freet
-
-- sources {Array<string>} – List of sources
-
-**Returns**
-
-Returns a delta change value to be added to the Freet’s original credibility score. 
-
-**Throws**
-
-Throws 400 error if freetId is not given or 404 error if freetId is not an existing Freet. 
-
-
-#### `POST /api/userCredScore/` - Set UserCredibilityScore
-
-**Body:**
-
-- userId {string} – parent User
-
-**Returns**
-
-Returns a credibility value based on the given user’s tweets. 
-
-**Throws**
-
-Throws 400 error if userId is not given or 404 error if userId is not an existing User. 
-
-
-#### `GET /api/freets?owner=USERNAMEfiltering=CREDFILTERING` - Get all freets in user’s feed
-
-**Body:**
-
-- unscored {Boolean}
-
-- highScored {Boolean}
-
-- lowScored {Boolean}
-
-**Returns**
-
-Returns a set of all existing Freets that have an author attribute belonging to USERNAME user’s following, sorted from most recent to least recent (based on datePosted attribute). Filters them according to the CREDFILTERING set of Booleans. 
-
-**Throws**
-
-Throws 400 error if owner is not given or 404 error if owner is not an existing username. 

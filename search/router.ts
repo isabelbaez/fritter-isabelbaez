@@ -27,6 +27,9 @@ const router = express.Router();
  */
 router.get(
   '/',
+  [
+    userValidator.isUserLoggedIn
+  ],
   async (req: Request, res: Response) => {
     const viewerFeed = await SearchCollection.findOneByUser(req.session.userId as string);
     res.status(200).json(util.constructSearchResponse(viewerFeed));

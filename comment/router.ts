@@ -13,14 +13,14 @@ const router = express.Router();
  * @name GET /api/comments
  *
  * @return {CommentResponse[]} - A list of all the comments sorted in descending
- *                      order by date modified
+ *                      order by date created
  */
 /**
  * Get comments by author.
  *
- * @name GET /api/freets?authorId=id
+ * @name GET /api/comments?authorId=id
  *
- * @return {CommentResponse[]} - An array of freets created by user with id, authorId
+ * @return {CommentResponse[]} - An array of comments created by user with id, authorId
  * @throws {400} - If authorId is not given
  * @throws {404} - If no user has given authorId
  *
@@ -49,15 +49,15 @@ router.get(
 );
 
 /**
- * Create a new freet.
+ * Create a new comment.
  *
- * @name POST /api/freets
+ * @name POST /api/comments
  *
- * @param {string} content - The content of the freet
- * @return {CommentResponse} - The created freet
+ * @param {string} content - The content of the comment
+ * @return {CommentResponse} - The created comment
  * @throws {403} - If the user is not logged in
- * @throws {400} - If the freet content is empty or a stream of empty spaces
- * @throws {413} - If the freet content is more than 140 characters long
+ * @throws {400} - If the comment content is empty or a stream of empty spaces
+ * @throws {413} - If the comment content is more than 140 characters long
  */
 router.post(
   '/',
@@ -80,12 +80,12 @@ router.post(
 /**
  * Delete a freet
  *
- * @name DELETE /api/freets/:id
+ * @name DELETE /api/comments/:id
  *
  * @return {string} - A success message
  * @throws {403} - If the user is not logged in or is not the author of
- *                 the freet
- * @throws {404} - If the freetId is not valid
+ *                 the comment
+ * @throws {404} - If the commentId is not valid
  */
 router.delete(
   '/:commentId?',

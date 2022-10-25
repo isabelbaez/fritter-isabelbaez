@@ -49,36 +49,6 @@ const isValidFreetContent = (req: Request, res: Response, next: NextFunction) =>
 };
 
 /**
- * Checks if the content of the freet in req.body is valid, i.e not a stream of empty
- * spaces and not more than 140 characters
- */
- const isValidSources = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.body.content) {
-    next();
-    return;
-  }
-
-  const noWhitespace = new RegExp('[^\s-]');
-
-  const {content} = req.body as {content: string};
-  if (!content.trim()) {
-    res.status(400).json({
-      error: 'Freet content must be at least one character long.'
-    });
-    return;
-  }
-
-  if (!content.match(noWhitespace)) {
-    res.status(413).json({
-      error: 'Sources must not contain any whitespace.'
-    });
-    return;
-  }
-
-  next();
-};
-
-/**
  * Checks if the current user is the author of the freet whose freetId is in req.params
  */
 const isValidFreetModifier = async (req: Request, res: Response, next: NextFunction) => {
@@ -96,7 +66,6 @@ const isValidFreetModifier = async (req: Request, res: Response, next: NextFunct
 
 export {
   isValidFreetContent,
-  isValidSources,
   isFreetExists,
   isValidFreetModifier
 };

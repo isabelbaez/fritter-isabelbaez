@@ -80,31 +80,4 @@ router.post(
   }
 );
 
-/**
- * Delete a freet
- *
- * @name DELETE /api/freets/:id
- *
- * @return {string} - A success message
- * @throws {403} - If the user is not logged in or is not the author of
- *                 the freet
- * @throws {404} - If the freetId is not valid
- */
-router.delete(
-  '/:scoreId?',
-  [
-    userValidator.isUserLoggedIn,
-    scoreValidator.isScoreExists,
-  ],
-  async (req: Request, res: Response) => {
-
-    const scoreId = (req.params.scoreId as string) ?? '';
-    
-    await FreetCredibilityScoreCollection.deleteOne(scoreId);
-    res.status(200).json({
-      message: 'Your score was deleted successfully.'
-    });
-  }
-);
-
 export {router as freetCredibilityScoreRouter};
