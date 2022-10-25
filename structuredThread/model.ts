@@ -10,23 +10,18 @@ import { freetCredibilityScoreRouter } from 'freetCredibilityScore/router';
  */
 
 // Type definition for Freet on the backend
-export type Freet = {
+export type StructuredThread = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   authorId: Types.ObjectId;
   dateCreated: Date;
-  content: string;
-  credibilityScoreId: Types.ObjectId;
-  likes: Array<string>; // Add a new field called "views" with the number type to the interface
-  refreets: Array<string>;
-  comments: Array<string>;
-  threadId: Types.ObjectId | "Disabled";
+  content: Array<string>;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
 // Freets stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
 
-const FreetSchema = new Schema<Freet>({
+const StructuredThreadSchema = new Schema<StructuredThread>({
   // The author userId
   authorId: {
     // Use Types.ObjectId outside of the schema
@@ -39,35 +34,12 @@ const FreetSchema = new Schema<Freet>({
     type: Date,
     required: true
   },
-  // The content of the freet
+  // Add views field to the schema
   content: {
-    type: String,
+    type: [String],
     required: true
-  },
-  credibilityScoreId: {
-    type: Schema.Types.ObjectId,
-    required: false
-  },
-  // Add views field to the schema
-  likes: {
-    type: [String],
-    default: new Array<string>()
-  },
-  // Add views field to the schema
-  refreets: {
-    type: [String],
-    default: new Array<string>()
-  },
-  comments: {
-    type: [String],
-    default: new Array<string>()
-  },
-  threadId: {
-    // Use Types.ObjectId outside of the schema
-    type: Schema.Types.Mixed,
-    default: "Disabled"
   },
 });
 
-const FreetModel = model<Freet>('Freet', FreetSchema);
-export default FreetModel;
+const StructuredThreadModel = model<StructuredThread>('StructuredThread', StructuredThreadSchema);
+export default StructuredThreadModel;

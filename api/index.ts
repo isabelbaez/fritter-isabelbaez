@@ -18,6 +18,7 @@ import {commentRouter} from '../comment/router';
 import {feedRouter} from '../feed/router';
 import {searchRouter} from '../search/router';
 import {contestCredibilityRouter} from '../contestCredibility/router';
+import {structuredThreadRouter} from '../structuredThread/router';
 
 
 // Load environmental variables
@@ -91,6 +92,7 @@ app.use('/api/comments', commentRouter);
 app.use('/api/feeds', feedRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/contestCredibility', contestCredibilityRouter);
+app.use('/api/structuredThreads', structuredThreadRouter);
 
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {

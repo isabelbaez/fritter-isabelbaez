@@ -8,6 +8,7 @@ import CommentCollection from '../comment/collection';
 import { Like } from '../like/model';
 import CommentModel from 'comment/model';
 import FreetCredibilityScoreCollection from '../freetCredibilityScore/collection';
+import StructuredThreadCollection from '../structuredThread/collection';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -261,8 +262,22 @@ class FreetCollection {
       await FreetCredibilityScoreCollection.deleteOne(freet.credibilityScoreId);
     }
 
-    const delFreet = await FreetModel.deleteOne({_id: freetId});
+    if (freet.threadId !== "Disabled") {
+      const thread = await StructuredThreadCollection.findOne(freet.threadId);
 
+      for (const threadFreedId of thread.content) {
+        const threatFreet = await FreetCollection.findOne(threadFreedId);
+        threatFreet.threadId = "Disabled";
+        threatFreet.credibilityScoreId = undefined;
+        await threatFreet.save();
+
+        await FreetCollection.deleteOne(threadFreedId);
+      }
+
+      await StructuredThreadCollection.deleteOne(freet.threadId);
+    }
+
+    const delFreet = await FreetModel.deleteOne({_id: freetId});
     return delFreet !== null;
   }
 }

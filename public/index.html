@@ -13,6 +13,7 @@
   <script src="/scripts/follow.js"></script>
   <script src="/scripts/feed.js"></script>
   <script src="/scripts/search.js"></script>
+  <script src="/scripts/structuredThread.js"></script>
   <script src="/scripts/contestCredibility.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
@@ -125,6 +126,19 @@
             <input id="author" name="author">
           </div>
           <input type="submit" value="View Freets By Author">
+        </form>
+
+        <form id="create-thread">
+          <h3>Create Thread</h3>
+          <div>
+            <label for="content1">Freet 1:</label>
+            <textarea id="content1" name="content1"></textarea>
+            <label for="content2">Freet 2:</label>
+            <textarea id="content2" name="content2"></textarea>
+            <label for="content3">Freet 3:</label>
+            <textarea id="content3" name="content3"></textarea>
+          </div>
+          <input type="submit" value="Create Thread">
         </form>
 
         <form id="create-freet">

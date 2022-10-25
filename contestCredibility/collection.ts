@@ -39,7 +39,7 @@ class ContestCredibilityCollection {
       delta,
     });
 
-    await FreetCredibilityScoreCollection.updateScore(parentId._id,delta);
+    await FreetCredibilityScoreCollection.updateScore(parentId,delta);
 
     await contest.save(); // Saves freet to MongoDB
     // set state for Freet

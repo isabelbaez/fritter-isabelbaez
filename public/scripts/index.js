@@ -45,6 +45,7 @@ const formsAndHandlers = {
   'search-users': searchUsers,
   'view-all-freets': viewAllFreets,
   'view-freets-by-author': viewFreetsByAuthor,
+  'create-thread': createThread,
   'create-freet': createFreet,
   'delete-freet': deleteFreet,
   'view-all-likes': viewAllLikes,
