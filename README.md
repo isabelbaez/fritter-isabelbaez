@@ -752,3 +752,52 @@ ______________________
 **Throws**
 
 - `403` if the user is not logged in
+
+______________________________
+
+#### `GET /api/structuredThreads` - Get all the threads
+
+**Returns**
+
+- An array of all threads sorted in descending order by date created
+
+#### `GET /api/structuredThreads?author=USERNAME` - Get threads by author
+
+**Returns**
+
+- An array of threads created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+
+#### `POST /api/structuredThreads` - Create a new thread
+
+**Body**
+
+- (multiple) `content#` _{string}_ - The content of the freet number '#' belonging to the thread
+
+**Returns**
+
+- A success message
+- A object with the created freet
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` If the thread content is empty or a stream of empty spaces
+
+#### `DELETE /api/structuredThreads/:threadId?` - Delete an existing thread
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the freet
+- `404` if the threadId is invalid
+
+_______________________
